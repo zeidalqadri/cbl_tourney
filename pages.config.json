@@ -1,0 +1,14 @@
+{
+  "name": "mss-melaka-basketball",
+  "compatibility_date": "2024-01-01",
+  "production_branch": "main",
+  "build_config": {
+    "build_command": "npm run build",
+    "build_output_directory": "out"
+  },
+  "deployment_config": {
+    "environment_variables": {
+      "NODE_VERSION": "20"
+    }
+  }
+}

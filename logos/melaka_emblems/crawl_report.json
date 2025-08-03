@@ -1,0 +1,188 @@
+{
+  "crawl_date": "2025-08-04 03:04:09",
+  "total_schools": 20,
+  "successful_downloads": 1,
+  "success_rate": "5.0%",
+  "schools": [
+    {
+      "code": "MEA0074",
+      "name": "SMK Ade Putra",
+      "type": "secondary",
+      "postcode": "78300",
+      "area": "Masjid Tanah",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEA2091",
+      "name": "SMK Air Molek",
+      "type": "secondary",
+      "postcode": "75460",
+      "area": "Melaka",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEA2100",
+      "name": "SMK Ayer Keroh",
+      "type": "secondary",
+      "postcode": "75450",
+      "area": "Ayer Keroh",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEA2093",
+      "name": "SMK Bukit Baru",
+      "type": "secondary",
+      "postcode": "75450",
+      "area": "Melaka",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEA2095",
+      "name": "SMK Bukit Katil",
+      "type": "secondary",
+      "postcode": "75450",
+      "area": "Melaka",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEA2099",
+      "name": "SMK Bukit Rambai",
+      "type": "secondary",
+      "postcode": "75250",
+      "area": "Melaka",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEB2098",
+      "name": "SMK Canossa Convent (M)",
+      "type": "secondary",
+      "postcode": "75050",
+      "area": "Melaka",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEB1064",
+      "name": "SMK Dang Anum",
+      "type": "secondary",
+      "postcode": "77300",
+      "area": "Merlimau",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEA1061",
+      "name": "SMK Dato' Abdul Rahman Ya'kub",
+      "type": "secondary",
+      "postcode": "77300",
+      "area": "Merlimau",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEE0075",
+      "name": "SMK Dato' Dol Said",
+      "type": "secondary",
+      "postcode": "78000",
+      "area": "Alor Gajah",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEA0072",
+      "name": "SMK Dato' Haji Talib Karim",
+      "type": "secondary",
+      "postcode": "78000",
+      "area": "Alor Gajah",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEB1063",
+      "name": "SMK Datuk Bendahara",
+      "type": "secondary",
+      "postcode": "77000",
+      "area": "Jasin",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEA0101",
+      "name": "SMK Durian Tunggal",
+      "type": "secondary",
+      "postcode": "76100",
+      "area": "Alor Gajah",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEB2091",
+      "name": "SMK Gajah Berang",
+      "type": "secondary",
+      "postcode": "75200",
+      "area": "Melaka",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEA0071",
+      "name": "SMK Ghafar Baba",
+      "type": "secondary",
+      "postcode": "78300",
+      "area": "Masjid Tanah",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEA0099",
+      "name": "SMK Hang Kasturi",
+      "type": "secondary",
+      "postcode": "78300",
+      "area": "Masjid Tanah",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEB2097",
+      "name": "SMK Infant Jesus Convent",
+      "type": "secondary",
+      "postcode": "75000",
+      "area": "Melaka",
+      "wikipedia_link": "https://en.wikipedia.org/wiki/Infant_Jesus_Convent,_Malacca",
+      "emblem_found": true
+    },
+    {
+      "code": "MEA1060",
+      "name": "SMK Iskandar Shah",
+      "type": "secondary",
+      "postcode": "77000",
+      "area": "Jasin",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEA2101",
+      "name": "SMK Kampung Gelam",
+      "type": "secondary",
+      "postcode": "76400",
+      "area": "Tanjung Kling",
+      "wikipedia_link": null,
+      "emblem_found": false
+    },
+    {
+      "code": "MEE0094",
+      "name": "SMK Kem Terendak",
+      "type": "secondary",
+      "postcode": "76200",
+      "area": "Kem Terendak",
+      "wikipedia_link": null,
+      "emblem_found": false
+    }
+  ]
+}

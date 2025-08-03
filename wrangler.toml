@@ -1,0 +1,10 @@
+# Cloudflare Pages configuration
+name = "cbl-basketball-tracker"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = ".vercel/output/static"
+
+# Enable Node.js compatibility for Next.js
+compatibility_flags = ["nodejs_compat"]
+
+[placement]
+mode = "smart"

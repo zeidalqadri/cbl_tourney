@@ -1,0 +1,859 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Melaka Schools - Quick Search Directory</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { background: #2196F3; color: white; padding: 20px; border-radius: 5px; }
+        .stats { background: #f5f5f5; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        .school { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .school h3 { margin-top: 0; color: #333; }
+        .links { margin: 10px 0; }
+        .links a { display: inline-block; margin: 5px 10px 5px 0; padding: 8px 15px; background: #2196F3; color: white; text-decoration: none; border-radius: 3px; }
+        .links a:hover { background: #1976D2; }
+        .type-primary { border-left: 5px solid #4CAF50; }
+        .type-secondary { border-left: 5px solid #2196F3; }
+        .search-box { margin: 20px 0; }
+        input[type="text"] { width: 300px; padding: 8px; font-size: 16px; }
+        .info-box { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .quick-stats { display: flex; gap: 20px; flex-wrap: wrap; }
+        .stat-item { background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    </style>
+    <script>
+        function filterSchools() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            var schools = document.getElementsByClassName('school');
+            var count = 0;
+            
+            for (var i = 0; i < schools.length; i++) {
+                var schoolName = schools[i].getAttribute('data-name').toLowerCase();
+                if (schoolName.includes(input)) {
+                    schools[i].style.display = '';
+                    count++;
+                } else {
+                    schools[i].style.display = 'none';
+                }
+            }
+            
+            document.getElementById('visibleCount').textContent = count;
+        }
+        
+        function copySearchQuery(schoolName) {
+            var query = schoolName + ' Melaka logo emblem';
+            navigator.clipboard.writeText(query).then(function() {
+                alert('Copied to clipboard: ' + query);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h1>🏫 Melaka Schools - Quick Search Directory</h1>
+        <p>Find school emblems using search engines and social media</p>
+    </div>
+    
+    <div class="info-box">
+        <h3>🔍 How to use this directory:</h3>
+        <ol>
+            <li>Use the search box to find a specific school</li>
+            <li>Click the search links to find the school's emblem</li>
+            <li>Facebook pages often have the school emblem as profile picture</li>
+            <li>Look for high-resolution images (at least 300x300 pixels)</li>
+            <li>Save emblems in folders: primary/[school_name]/ or secondary/[school_name]/</li>
+        </ol>
+    </div>
+    
+    <div class="stats">
+        <div class="quick-stats">
+            <div class="stat-item">
+                <strong>Total Schools:</strong> 55
+            </div>
+            <div class="stat-item">
+                <strong>Primary:</strong> 0
+            </div>
+            <div class="stat-item">
+                <strong>Secondary:</strong> 55
+            </div>
+            <div class="stat-item">
+                <strong>Visible:</strong> <span id="visibleCount">55</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="search-box">
+        <input type="text" id="searchInput" onkeyup="filterSchools()" placeholder="Search schools by name...">
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Ade Putra">
+        <h3>SMK Ade Putra (MEA0074)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Masjid Tanah | <strong>Postcode:</strong> 78300</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Ade%20Putra%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Ade%20Putra%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Ade%20Putra%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkadeputra" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkadeputra.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Ade Putra'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Air Molek">
+        <h3>SMK Air Molek (MEA2091)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75460</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Air%20Molek%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Air%20Molek%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Air%20Molek%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkairmolek" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkairmolek.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Air Molek'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Ayer Keroh">
+        <h3>SMK Ayer Keroh (MEA2100)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Ayer Keroh | <strong>Postcode:</strong> 75450</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Ayer%20Keroh%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Ayer%20Keroh%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Ayer%20Keroh%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkayerkeroh" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkayerkeroh.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Ayer Keroh'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Bukit Baru">
+        <h3>SMK Bukit Baru (MEA2093)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75450</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Bukit%20Baru%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Bukit%20Baru%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Bukit%20Baru%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkbukitbaru" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkbukitbaru.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Bukit Baru'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Bukit Katil">
+        <h3>SMK Bukit Katil (MEA2095)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75450</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Bukit%20Katil%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Bukit%20Katil%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Bukit%20Katil%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkbukitkatil" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkbukitkatil.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Bukit Katil'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Bukit Rambai">
+        <h3>SMK Bukit Rambai (MEA2099)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75250</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Bukit%20Rambai%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Bukit%20Rambai%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Bukit%20Rambai%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkbukitrambai" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkbukitrambai.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Bukit Rambai'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Canossa Convent (M)">
+        <h3>SMK Canossa Convent (M) (MEB2098)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75050</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Canossa%20Convent%20%28M%29%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Canossa%20Convent%20%28M%29%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Canossa%20Convent%20%28M%29%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkcanossaconventm" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkcanossaconventm.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Canossa Convent (M)'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Dang Anum">
+        <h3>SMK Dang Anum (MEB1064)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Merlimau | <strong>Postcode:</strong> 77300</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Dang%20Anum%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Dang%20Anum%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Dang%20Anum%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkdanganum" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkdanganum.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Dang Anum'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Dato' Abdul Rahman Ya'kub">
+        <h3>SMK Dato' Abdul Rahman Ya'kub (MEA1061)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Merlimau | <strong>Postcode:</strong> 77300</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Dato%27%20Abdul%20Rahman%20Ya%27kub%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Dato%27%20Abdul%20Rahman%20Ya%27kub%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Dato%27%20Abdul%20Rahman%20Ya%27kub%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkdatoabdulrahmanyakub" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkdatoabdulrahmanyakub.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Dato' Abdul Rahman Ya'kub'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Dato' Dol Said">
+        <h3>SMK Dato' Dol Said (MEE0075)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Alor Gajah | <strong>Postcode:</strong> 78000</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Dato%27%20Dol%20Said%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Dato%27%20Dol%20Said%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Dato%27%20Dol%20Said%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkdatodolsaid" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkdatodolsaid.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Dato' Dol Said'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Dato' Haji Talib Karim">
+        <h3>SMK Dato' Haji Talib Karim (MEA0072)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Alor Gajah | <strong>Postcode:</strong> 78000</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Dato%27%20Haji%20Talib%20Karim%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Dato%27%20Haji%20Talib%20Karim%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Dato%27%20Haji%20Talib%20Karim%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkdatohajitalibkarim" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkdatohajitalibkarim.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Dato' Haji Talib Karim'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Datuk Bendahara">
+        <h3>SMK Datuk Bendahara (MEB1063)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Jasin | <strong>Postcode:</strong> 77000</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Datuk%20Bendahara%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Datuk%20Bendahara%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Datuk%20Bendahara%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkdatukbendahara" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkdatukbendahara.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Datuk Bendahara'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Durian Tunggal">
+        <h3>SMK Durian Tunggal (MEA0101)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Alor Gajah | <strong>Postcode:</strong> 76100</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Durian%20Tunggal%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Durian%20Tunggal%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Durian%20Tunggal%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkduriantunggal" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkduriantunggal.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Durian Tunggal'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Gajah Berang">
+        <h3>SMK Gajah Berang (MEB2091)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75200</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Gajah%20Berang%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Gajah%20Berang%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Gajah%20Berang%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkgajahberang" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkgajahberang.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Gajah Berang'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Ghafar Baba">
+        <h3>SMK Ghafar Baba (MEA0071)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Masjid Tanah | <strong>Postcode:</strong> 78300</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Ghafar%20Baba%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Ghafar%20Baba%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Ghafar%20Baba%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkghafarbaba" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkghafarbaba.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Ghafar Baba'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Hang Kasturi">
+        <h3>SMK Hang Kasturi (MEA0099)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Masjid Tanah | <strong>Postcode:</strong> 78300</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Hang%20Kasturi%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Hang%20Kasturi%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Hang%20Kasturi%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkhangkasturi" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkhangkasturi.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Hang Kasturi'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Infant Jesus Convent">
+        <h3>SMK Infant Jesus Convent (MEB2097)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75000</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Infant%20Jesus%20Convent%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Infant%20Jesus%20Convent%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Infant%20Jesus%20Convent%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkinfantjesusconvent" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkinfantjesusconvent.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Infant Jesus Convent'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Iskandar Shah">
+        <h3>SMK Iskandar Shah (MEA1060)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Jasin | <strong>Postcode:</strong> 77000</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Iskandar%20Shah%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Iskandar%20Shah%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Iskandar%20Shah%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkiskandarshah" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkiskandarshah.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Iskandar Shah'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Kampung Gelam">
+        <h3>SMK Kampung Gelam (MEA2101)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Tanjung Kling | <strong>Postcode:</strong> 76400</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Kampung%20Gelam%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Kampung%20Gelam%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Kampung%20Gelam%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkkampunggelam" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkkampunggelam.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Kampung Gelam'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Kem Terendak">
+        <h3>SMK Kem Terendak (MEE0094)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Kem Terendak | <strong>Postcode:</strong> 76200</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Kem%20Terendak%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Kem%20Terendak%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Kem%20Terendak%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkkemterendak" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkkemterendak.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Kem Terendak'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Klebang Besar">
+        <h3>SMK Klebang Besar (MEA2092)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75200</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Klebang%20Besar%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Klebang%20Besar%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Klebang%20Besar%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkklebangbesar" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkklebangbesar.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Klebang Besar'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Lubok China">
+        <h3>SMK Lubok China (MEA0095)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Lubok China | <strong>Postcode:</strong> 78100</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Lubok%20China%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Lubok%20China%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Lubok%20China%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smklubokchina" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smklubokchina.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Lubok China'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Malim">
+        <h3>SMK Malim (MEA2096)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75250</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Malim%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Malim%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Malim%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkmalim" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkmalim.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Malim'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Methodist (ACS) Melaka (M)">
+        <h3>SMK Methodist (ACS) Melaka (M) (MEB2094)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75200</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Methodist%20%28ACS%29%20Melaka%20%28M%29%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Methodist%20%28ACS%29%20Melaka%20%28M%29%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Methodist%20%28ACS%29%20Melaka%20%28M%29%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkmethodistacsmelakam" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkmethodistacsmelakam.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Methodist (ACS) Melaka (M)'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Munshi Abdullah">
+        <h3>SMK Munshi Abdullah (MEA2087)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75350</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Munshi%20Abdullah%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Munshi%20Abdullah%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Munshi%20Abdullah%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkmunshiabdullah" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkmunshiabdullah.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Munshi Abdullah'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Naning">
+        <h3>SMK Naning (MEA0075)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Alor Gajah | <strong>Postcode:</strong> 78000</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Naning%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Naning%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Naning%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smknaning" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smknaning.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Naning'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Nyalas">
+        <h3>SMK Nyalas (MEA1079)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Asahan | <strong>Postcode:</strong> 77100</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Nyalas%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Nyalas%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Nyalas%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smknyalas" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smknyalas.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Nyalas'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Padang Temu">
+        <h3>SMK Padang Temu (MEA2097)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75050</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Padang%20Temu%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Padang%20Temu%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Padang%20Temu%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkpadangtemu" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkpadangtemu.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Padang Temu'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Paya Rumput">
+        <h3>SMK Paya Rumput (MEA2103)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 76450</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Paya%20Rumput%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Paya%20Rumput%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Paya%20Rumput%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkpayarumput" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkpayarumput.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Paya Rumput'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Perempuan Methodist">
+        <h3>SMK Perempuan Methodist (MEB2095)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75200</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Perempuan%20Methodist%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Perempuan%20Methodist%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Perempuan%20Methodist%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkperempuanmethodist" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkperempuanmethodist.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Perempuan Methodist'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Pernu">
+        <h3>SMK Pernu (MEA2102)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75460</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Pernu%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Pernu%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Pernu%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkpernu" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkpernu.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Pernu'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Rahmat">
+        <h3>SMK Rahmat (MEA0073)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Kuala Sungai Baru | <strong>Postcode:</strong> 78200</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Rahmat%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Rahmat%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Rahmat%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkrahmat" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkrahmat.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Rahmat'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Selandar">
+        <h3>SMK Selandar (MEA1077)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Selandar | <strong>Postcode:</strong> 77500</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Selandar%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Selandar%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Selandar%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkselandar" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkselandar.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Selandar'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Seri Bemban">
+        <h3>SMK Seri Bemban (MEA1080)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Bemban | <strong>Postcode:</strong> 77200</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Seri%20Bemban%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Seri%20Bemban%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Seri%20Bemban%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkseribemban" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkseribemban.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Seri Bemban'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Seri Kota">
+        <h3>SMK Seri Kota (MEB2145)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75050</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Seri%20Kota%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Seri%20Kota%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Seri%20Kota%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkserikota" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkserikota.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Seri Kota'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Seri Pengkalan">
+        <h3>SMK Seri Pengkalan (MEB0077)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Alor Gajah | <strong>Postcode:</strong> 78000</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Seri%20Pengkalan%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Seri%20Pengkalan%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Seri%20Pengkalan%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkseripengkalan" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkseripengkalan.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Seri Pengkalan'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Seri Tanjung">
+        <h3>SMK Seri Tanjung (MEA2089)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Tanjung Kling | <strong>Postcode:</strong> 76400</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Seri%20Tanjung%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Seri%20Tanjung%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Seri%20Tanjung%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkseritanjung" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkseritanjung.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Seri Tanjung'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Simpang Bekoh">
+        <h3>SMK Simpang Bekoh (MEA1076)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Jasin | <strong>Postcode:</strong> 77100</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Simpang%20Bekoh%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Simpang%20Bekoh%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Simpang%20Bekoh%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smksimpangbekoh" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smksimpangbekoh.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Simpang Bekoh'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Sri Mahkota">
+        <h3>SMK Sri Mahkota (MEA1072)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Merlimau | <strong>Postcode:</strong> 77300</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Sri%20Mahkota%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Sri%20Mahkota%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Sri%20Mahkota%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smksrimahkota" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smksrimahkota.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Sri Mahkota'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK St Francis">
+        <h3>SMK St Francis (MEB2096)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75000</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20St%20Francis%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20St%20Francis%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20St%20Francis%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smkstfrancis" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smkstfrancis.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK St Francis'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Sultan Alauddin">
+        <h3>SMK Sultan Alauddin (MEB0079)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Masjid Tanah | <strong>Postcode:</strong> 78300</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Sultan%20Alauddin%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Sultan%20Alauddin%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Sultan%20Alauddin%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smksultanalauddin" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smksultanalauddin.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Sultan Alauddin'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Sultan Mansor Shah">
+        <h3>SMK Sultan Mansor Shah (MEE0074)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Tampin Pos | <strong>Postcode:</strong> 73000</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Sultan%20Mansor%20Shah%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Sultan%20Mansor%20Shah%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Sultan%20Mansor%20Shah%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smksultanmansorshah" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smksultanmansorshah.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Sultan Mansor Shah'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Sungai Rambai">
+        <h3>SMK Sungai Rambai (MEA1078)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Merlimau | <strong>Postcode:</strong> 77400</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Sungai%20Rambai%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Sungai%20Rambai%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Sungai%20Rambai%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smksungairambai" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smksungairambai.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Sungai Rambai'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Sungai Udang">
+        <h3>SMK Sungai Udang (MEA0100)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Sungai Udang | <strong>Postcode:</strong> 76300</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Sungai%20Udang%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Sungai%20Udang%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Sungai%20Udang%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smksungaiudang" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smksungaiudang.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Sungai Udang'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Tan Sri Haji Abdul Aziz Tapa">
+        <h3>SMK Tan Sri Haji Abdul Aziz Tapa (MEB1065)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Jasin | <strong>Postcode:</strong> 77000</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Tan%20Sri%20Haji%20Abdul%20Aziz%20Tapa%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Tan%20Sri%20Haji%20Abdul%20Aziz%20Tapa%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Tan%20Sri%20Haji%20Abdul%20Aziz%20Tapa%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smktansrihajiabdulaziztapa" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smktansrihajiabdulaziztapa.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Tan Sri Haji Abdul Aziz Tapa'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Tebong">
+        <h3>SMK Tebong (MEA0102)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Alor Gajah | <strong>Postcode:</strong> 76460</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Tebong%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Tebong%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Tebong%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smktebong" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smktebong.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Tebong'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Telok Mas">
+        <h3>SMK Telok Mas (MEA2098)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Telok Mas | <strong>Postcode:</strong> 75460</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Telok%20Mas%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Telok%20Mas%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Telok%20Mas%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smktelokmas" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smktelokmas.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Telok Mas'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Tinggi Melaka">
+        <h3>SMK Tinggi Melaka (MEB2090)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75000</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Tinggi%20Melaka%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Tinggi%20Melaka%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Tinggi%20Melaka%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smktinggimelaka" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smktinggimelaka.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Tinggi Melaka'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Tinggi Perempuan">
+        <h3>SMK Tinggi Perempuan (MEB2092)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75400</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Tinggi%20Perempuan%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Tinggi%20Perempuan%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Tinggi%20Perempuan%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smktinggiperempuan" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smktinggiperempuan.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Tinggi Perempuan'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Tinggi St David">
+        <h3>SMK Tinggi St David (MEB2093)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75150</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Tinggi%20St%20David%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Tinggi%20St%20David%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Tinggi%20St%20David%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smktinggistdavid" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smktinggistdavid.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Tinggi St David'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Tun Haji Abd Malek">
+        <h3>SMK Tun Haji Abd Malek (MEA2094)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75250</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Tun%20Haji%20Abd%20Malek%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Tun%20Haji%20Abd%20Malek%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Tun%20Haji%20Abd%20Malek%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smktunhajiabdmalek" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smktunhajiabdmalek.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Tun Haji Abd Malek'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Tun Mutahir">
+        <h3>SMK Tun Mutahir (MEA2088)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75350</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Tun%20Mutahir%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Tun%20Mutahir%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Tun%20Mutahir%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smktunmutahir" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smktunmutahir.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Tun Mutahir'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Tun Syed Zahiruddin">
+        <h3>SMK Tun Syed Zahiruddin (MEA1081)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Merlimau | <strong>Postcode:</strong> 77300</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Tun%20Syed%20Zahiruddin%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Tun%20Syed%20Zahiruddin%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Tun%20Syed%20Zahiruddin%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smktunsyedzahiruddin" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smktunsyedzahiruddin.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Tun Syed Zahiruddin'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Tun Tijah">
+        <h3>SMK Tun Tijah (MEA2086)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75400</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Tun%20Tijah%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Tun%20Tijah%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Tun%20Tijah%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smktuntijah" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smktuntijah.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Tun Tijah'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+    <div class="school type-secondary" data-name="SMK Tun Tuah">
+        <h3>SMK Tun Tuah (MEB2102)</h3>
+        <p><strong>Type:</strong> Secondary | <strong>Area:</strong> Melaka | <strong>Postcode:</strong> 75200</p>
+        
+        <div class="links">
+            <a href="https://www.google.com/search?q=SMK%20Tun%20Tuah%20logo%20emblem%20lambang&tbm=isch" target="_blank">🖼️ Google Images</a>
+            <a href="https://www.facebook.com/search/top?q=SMK%20Tun%20Tuah%20Melaka" target="_blank">📘 Facebook Search</a>
+            <a href="https://www.google.com/search?q=SMK%20Tun%20Tuah%20Melaka" target="_blank">🔍 Google Search</a>
+            <a href="https://www.facebook.com/smktuntuah" target="_blank">📱 Try Direct FB</a>
+            <a href="https://smktuntuah.blogspot.com" target="_blank">📝 Try Blog</a>
+            <a href="#" onclick="copySearchQuery('SMK Tun Tuah'); return false;">📋 Copy Search</a>
+        </div>
+    </div>
+
+</body>
+</html>
