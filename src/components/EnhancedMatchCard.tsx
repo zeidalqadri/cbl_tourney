@@ -34,6 +34,8 @@ export default function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
   const isLive = match.status === 'in_progress'
   const isCompleted = match.status === 'completed'
   const hasStarted = match.scoreA !== undefined || match.scoreB !== undefined
+  const isPlaceholderMatch = match.teamA.name.includes('Winner') || match.teamA.name.includes('Champion') || 
+                             match.teamB.name.includes('Winner') || match.teamB.name.includes('Champion')
 
   const getStatusColor = () => {
     switch (match.status) {
@@ -102,7 +104,7 @@ export default function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
               <Users className="w-6 h-6 text-mss-turquoise" />
             </div>
             <div>
-              <h3 className={`font-semibold text-lg ${winner === 'A' ? 'text-green-700 dark:text-green-400' : ''}`}>
+              <h3 className={`font-semibold text-lg ${winner === 'A' ? 'text-green-700 dark:text-green-400' : ''} ${isPlaceholderMatch && (match.teamA.name.includes('Winner') || match.teamA.name.includes('Champion')) ? 'text-gray-500 italic' : ''}`}>
                 {match.teamA.name}
               </h3>
               {winner === 'A' && <span className="text-xs text-green-600 dark:text-green-400 font-medium">WINNER</span>}
@@ -142,7 +144,7 @@ export default function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
               <Users className="w-6 h-6 text-cbl-orange" />
             </div>
             <div>
-              <h3 className={`font-semibold text-lg ${winner === 'B' ? 'text-green-700 dark:text-green-400' : ''}`}>
+              <h3 className={`font-semibold text-lg ${winner === 'B' ? 'text-green-700 dark:text-green-400' : ''} ${isPlaceholderMatch && (match.teamB.name.includes('Winner') || match.teamB.name.includes('Champion')) ? 'text-gray-500 italic' : ''}`}>
                 {match.teamB.name}
               </h3>
               {winner === 'B' && <span className="text-xs text-green-600 dark:text-green-400 font-medium">WINNER</span>}
