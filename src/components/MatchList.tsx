@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { Match } from '@/types/tournament'
 import { formatTime } from '@/lib/utils'
 import { getMatches, subscribeToMatches } from '@/lib/tournament-api'
+import EnhancedMatchCard from './EnhancedMatchCard'
+import { Calendar, Trophy, Users } from 'lucide-react'
 
 export default function MatchList() {
   const [matches, setMatches] = useState<Match[]>([])
@@ -37,81 +39,94 @@ export default function MatchList() {
     }
   }
 
-  const dates = ['2025-08-04', '2025-08-05', '2025-08-06', '2025-08-07']
+  const dates = [
+    { date: '2025-08-04', label: 'Day 1 - Group Stage' },
+    { date: '2025-08-05', label: 'Day 2 - Group Stage' },
+    { date: '2025-08-06', label: 'Day 3 - Knockout' },
+    { date: '2025-08-07', label: 'Day 4 - Finals' }
+  ]
 
   if (loading) {
-    return <div className="text-center py-8">Loading matches...</div>
+    return (
+      <div className="flex flex-col items-center justify-center py-16">
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 bg-gradient-to-r from-mss-turquoise to-cbl-orange rounded-full animate-spin" />
+          <div className="absolute inset-2 bg-white dark:bg-gray-900 rounded-full" />
+        </div>
+        <p className="mt-4 text-gray-600 dark:text-gray-400 font-medium">Loading matches...</p>
+      </div>
+    )
   }
 
+  const currentDayMatches = matches.filter(m => m.date === selectedDate)
+
   return (
-    <div>
-      <div className="mb-6 flex space-x-2 overflow-x-auto pb-2">
-        {dates.map(date => (
-          <button
-            key={date}
-            onClick={() => setSelectedDate(date)}
-            className={`px-4 py-2 rounded-lg whitespace-nowrap ${
-              selectedDate === date
-                ? 'bg-cbl-orange text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            {new Date(date).toLocaleDateString('en-MY', { 
-              weekday: 'short', 
-              day: 'numeric', 
-              month: 'short' 
-            })}
-          </button>
-        ))}
+    <div className="space-y-6">
+      {/* Date Selection */}
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4">
+        <div className="flex items-center gap-2 mb-4">
+          <Calendar className="w-5 h-5 text-mss-turquoise" />
+          <h2 className="font-display text-xl">TOURNAMENT SCHEDULE</h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          {dates.map(({ date, label }) => {
+            const isActive = selectedDate === date
+            const dayMatches = matches.filter(m => m.date === date)
+            const hasLive = dayMatches.some(m => m.status === 'in_progress')
+            
+            return (
+              <button
+                key={date}
+                onClick={() => setSelectedDate(date)}
+                className={`relative p-4 rounded-lg transition-all ${
+                  isActive
+                    ? 'bg-gradient-to-r from-mss-turquoise to-teal-500 text-white shadow-lg scale-105'
+                    : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                {hasLive && (
+                  <div className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                )}
+                <div className="text-sm font-medium opacity-80">
+                  {new Date(date).toLocaleDateString('en-MY', { weekday: 'short' })}
+                </div>
+                <div className="text-lg font-bold">
+                  {new Date(date).toLocaleDateString('en-MY', { day: 'numeric', month: 'short' })}
+                </div>
+                <div className="text-xs mt-1 opacity-70">
+                  {label.split(' - ')[1]}
+                </div>
+                <div className="text-xs mt-2 font-display">
+                  {dayMatches.length} MATCHES
+                </div>
+              </button>
+            )
+          })}
+        </div>
       </div>
 
-      <div className="space-y-4">
-        {matches.filter(m => m.date === selectedDate).map(match => (
-          <div key={match.id} className="bg-white rounded-lg shadow-sm p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Match #{match.matchNumber}</span>
-                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                  match.division === 'boys' 
-                    ? 'bg-blue-100 text-blue-700' 
-                    : 'bg-pink-100 text-pink-700'
-                }`}>
-                  {match.division === 'boys' ? 'Boys' : 'Girls'}
-                </span>
-              </div>
-              <span className="text-sm font-medium text-gray-700">{match.venue}</span>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">{match.teamA.name}</span>
-                  <span className="text-2xl font-bold">
-                    {match.scoreA !== undefined ? match.scoreA : '-'}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">{match.teamB.name}</span>
-                  <span className="text-2xl font-bold">
-                    {match.scoreB !== undefined ? match.scoreB : '-'}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="ml-4 text-right">
-                <div className="text-lg font-medium">{match.time}</div>
-                <div className={`text-sm px-2 py-1 rounded ${
-                  match.status === 'completed' ? 'bg-green-100 text-green-700' :
-                  match.status === 'in_progress' ? 'bg-yellow-100 text-yellow-700' :
-                  'bg-gray-100 text-gray-700'
-                }`}>
-                  {match.status.replace('_', ' ')}
-                </div>
-              </div>
-            </div>
+      {/* All Matches in Chronological Order */}
+      {currentDayMatches.length > 0 ? (
+        <div className="space-y-4">
+          <h3 className="font-display text-2xl text-gray-700 dark:text-gray-300">
+            DAY'S MATCHES
+            <span className="text-sm ml-2 text-gray-500">({currentDayMatches.length} total)</span>
+          </h3>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {currentDayMatches.map(match => (
+              <EnhancedMatchCard 
+                key={match.id} 
+                match={match}
+              />
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ) : (
+        <div className="text-center py-16">
+          <Trophy className="w-16 h-16 mx-auto text-gray-300 dark:text-gray-700 mb-4" />
+          <p className="text-gray-500 dark:text-gray-400">No matches scheduled for this day</p>
+        </div>
+      )}
     </div>
   )
 }

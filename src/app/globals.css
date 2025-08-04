@@ -1,3 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  body {
+    @apply bg-cbl-light;
+  }
+}
+
+@layer components {
+  .match-card-live {
+    @apply relative overflow-hidden;
+    box-shadow: 0 0 0 2px theme('colors.live-pulse'),
+                0 0 20px theme('colors.live-pulse' / 30%);
+    animation: pulse-live 2s infinite;
+  }
+
+  .score-update {
+    @apply inline-block;
+    animation: score-pop 0.5s ease-out;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-mss-turquoise to-cbl-orange bg-clip-text text-transparent;
+  }
+
+  .card-gradient-border {
+    @apply relative;
+    background: linear-gradient(to right, theme('colors.mss-turquoise'), theme('colors.cbl-orange'));
+    padding: 2px;
+  }
+
+  .card-gradient-border > * {
+    @apply bg-white dark:bg-card-dark;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  /* Custom scrollbar for tournament sections */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800 rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-mss-turquoise rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-cbl-orange;
+  }
+}
