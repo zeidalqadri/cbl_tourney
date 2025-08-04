@@ -63,7 +63,7 @@ export default function GroupStageView() {
   const girlsGroups = groups.filter(g => g.division === 'girls')
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-8">
       <div>
         <h2 className="text-2xl font-bold text-cbl-blue mb-4">Group Stage Standings</h2>
         <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
