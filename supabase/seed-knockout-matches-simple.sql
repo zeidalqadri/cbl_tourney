@@ -62,95 +62,95 @@ INSERT INTO tournament_matches (
   -- Group LXA matches
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 103, 2,
    '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111112',
-   '2025-08-06 08:20:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 08:20:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LXA", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 110, 2,
    '11111111-1111-1111-1111-111111111113', '11111111-1111-1111-1111-111111111111',
-   '2025-08-06 10:40:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 10:40:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LXA", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 117, 2,
    '11111111-1111-1111-1111-111111111112', '11111111-1111-1111-1111-111111111113',
-   '2025-08-06 13:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 13:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LXA", "division": "boys"}'),
   
   -- Group LXB matches
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 104, 2,
    '11111111-1111-1111-1111-111111111114', '11111111-1111-1111-1111-111111111115',
-   '2025-08-06 08:40:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 08:40:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LXB", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 105, 2,
    '11111111-1111-1111-1111-111111111116', '11111111-1111-1111-1111-111111111117',
-   '2025-08-06 09:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 09:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LXB", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 111, 2,
    '11111111-1111-1111-1111-111111111114', '11111111-1111-1111-1111-111111111116',
-   '2025-08-06 11:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 11:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LXB", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 112, 2,
    '11111111-1111-1111-1111-111111111115', '11111111-1111-1111-1111-111111111117',
-   '2025-08-06 11:20:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 11:20:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LXB", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 118, 2,
    '11111111-1111-1111-1111-111111111117', '11111111-1111-1111-1111-111111111114',
-   '2025-08-06 13:20:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 13:20:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LXB", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 119, 2,
    '11111111-1111-1111-1111-111111111116', '11111111-1111-1111-1111-111111111115',
-   '2025-08-06 13:40:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 13:40:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LXB", "division": "boys"}'),
   
   -- Group LYA matches
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 106, 2,
    '11111111-1111-1111-1111-111111111118', '11111111-1111-1111-1111-111111111119',
-   '2025-08-06 09:20:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 09:20:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LYA", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 107, 2,
    '11111111-1111-1111-1111-11111111111a', '11111111-1111-1111-1111-11111111111b',
-   '2025-08-06 09:40:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 09:40:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LYA", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 113, 2,
    '11111111-1111-1111-1111-111111111118', '11111111-1111-1111-1111-11111111111a',
-   '2025-08-06 11:40:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 11:40:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LYA", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 114, 2,
    '11111111-1111-1111-1111-111111111119', '11111111-1111-1111-1111-11111111111b',
-   '2025-08-06 12:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 12:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LYA", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 120, 2,
    '11111111-1111-1111-1111-11111111111b', '11111111-1111-1111-1111-111111111118',
-   '2025-08-06 14:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 14:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LYA", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 121, 2,
    '11111111-1111-1111-1111-11111111111a', '11111111-1111-1111-1111-111111111119',
-   '2025-08-06 14:20:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 14:20:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LYA", "division": "boys"}'),
   
   -- Group LYB matches
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 108, 2,
    '11111111-1111-1111-1111-11111111111d', '11111111-1111-1111-1111-11111111111e',
-   '2025-08-06 10:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 10:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LYB", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 115, 2,
    '11111111-1111-1111-1111-11111111111e', '11111111-1111-1111-1111-11111111111c',
-   '2025-08-06 12:20:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 12:20:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LYB", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 122, 2,
    '11111111-1111-1111-1111-11111111111c', '11111111-1111-1111-1111-11111111111d',
-   '2025-08-06 14:40:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 14:40:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "second_round", "group": "LYB", "division": "boys"}')
 ON CONFLICT (id) DO NOTHING;
 
@@ -162,22 +162,22 @@ INSERT INTO tournament_matches (
 ) VALUES
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 102, 2,
    '22222222-2222-2222-2222-222222222221', '22222222-2222-2222-2222-222222222222',
-   '2025-08-06 08:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 08:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "quarter_final", "match_code": "PQF1", "division": "girls"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 109, 2,
    '22222222-2222-2222-2222-222222222223', '22222222-2222-2222-2222-222222222224',
-   '2025-08-06 10:20:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 10:20:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "quarter_final", "match_code": "PQF2", "division": "girls"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 116, 2,
    '22222222-2222-2222-2222-222222222225', '22222222-2222-2222-2222-222222222226',
-   '2025-08-06 12:40:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 12:40:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "quarter_final", "match_code": "PQF3", "division": "girls"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 123, 2,
    '22222222-2222-2222-2222-222222222227', '22222222-2222-2222-2222-222222222228',
-   '2025-08-06 15:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-06 15:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "quarter_final", "match_code": "PQF4", "division": "girls"}')
 ON CONFLICT (id) DO NOTHING;
 
@@ -191,23 +191,23 @@ INSERT INTO tournament_matches (
   -- Girls Semi Finals
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 124, 3,
    '22222222-2222-2222-2222-222222222229', '22222222-2222-2222-2222-22222222222a',
-   '2025-08-07 08:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-07 08:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "semi_final", "match_code": "PSF1", "division": "girls"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 125, 3,
    '22222222-2222-2222-2222-22222222222b', '22222222-2222-2222-2222-22222222222c',
-   '2025-08-07 08:40:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-07 08:40:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "semi_final", "match_code": "PSF2", "division": "girls"}'),
   
   -- Boys Semi Finals
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 126, 3,
    '11111111-1111-1111-1111-11111111111f', '11111111-1111-1111-1111-111111111120',
-   '2025-08-07 09:20:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-07 09:20:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "semi_final", "match_code": "LSF1", "division": "boys"}'),
   
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 127, 3,
    '11111111-1111-1111-1111-111111111121', '11111111-1111-1111-1111-111111111122',
-   '2025-08-07 10:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-07 10:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "semi_final", "match_code": "LSF2", "division": "boys"}')
 ON CONFLICT (id) DO NOTHING;
 
@@ -220,13 +220,13 @@ INSERT INTO tournament_matches (
   -- Girls Final
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 128, 4,
    '22222222-2222-2222-2222-22222222222d', '22222222-2222-2222-2222-22222222222e',
-   '2025-08-07 11:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-07 11:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "final", "match_code": "P.FINAL", "division": "girls"}'),
   
   -- Boys Final
   (gen_random_uuid(), '66666666-6666-6666-6666-666666666666', 129, 4,
    '11111111-1111-1111-1111-111111111123', '11111111-1111-1111-1111-111111111124',
-   '2025-08-07 12:00:00+08', 'SJKC YU HWA (Court A)', 'scheduled',
+   '2025-08-07 12:00:00+08', 'SJKC YU HWA (Court A)', 'pending',
    '{"type": "final", "match_code": "L.FINAL", "division": "boys"}')
 ON CONFLICT (id) DO NOTHING;
 
