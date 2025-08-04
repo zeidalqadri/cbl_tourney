@@ -66,9 +66,15 @@ export default function GroupStageView() {
     <div className="space-y-8">
       <div>
         <h2 className="text-2xl font-bold text-cbl-blue mb-4">Group Stage Standings</h2>
-        <p className="text-gray-600 mb-6">
-          Top team from each group advances to the knockout stage. Boys groups advance to Second Round, Girls groups advance to Quarter Finals.
-        </p>
+        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
+          <p className="text-gray-700 dark:text-gray-300 font-medium mb-3">
+            Top team from each group advances to the knockout stage. Boys groups advance to Second Round, Girls groups advance to Quarter Finals.
+          </p>
+          <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+            <p><strong>Legend:</strong> P = Played, W = Won, L = Lost, PF = Points For, PA = Points Against, +/- = Point Differential, Pts = Points</p>
+            <p><strong>Scoring:</strong> Win = 2 pts, Loss = 1 pt</p>
+          </div>
+        </div>
       </div>
 
       {/* Boys Division */}

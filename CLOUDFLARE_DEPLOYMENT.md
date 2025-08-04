@@ -1,217 +1,196 @@
-# 🚀 Cloudflare Pages Deployment Guide
+# 🏗️ Cloudflare Pages Deployment Guide
 
-## MSS Melaka 2025 Basketball Tournament System
+## Project: MSS Melaka 2025 Basketball Tournament System
+**Deployment Strategy**: Branch-based Preview Deployments
+**Production URL**: https://mss-melaka-2025.pages.dev
 
-### 🌐 Live URLs
+## 🚀 Preview Deployment Complete!
 
-- **Production**: https://e7e781d9.mss-melaka-basketball.pages.dev
-- **Project Dashboard**: https://dash.cloudflare.com/pages/project/mss-melaka-basketball
+Your UI improvements are now live at:
+- **Preview URL**: https://preview-ui-improvements.mss-melaka-2025.pages.dev
+- **Deployment ID**: https://28366746.mss-melaka-2025.pages.dev
 
-### 📊 Deployment Architecture
+### Changes Deployed:
+1. ✅ Bottom navigation visible on desktop
+2. ✅ Matches stay in chronological order
+3. ✅ Brighter color scheme (blue/cyan gradients)
+4. ✅ Preview button removed from match cards
+
+## 📋 Deployment Architecture
 
 ```
 ┌─────────────────────────────────────────┐
-│ Cloudflare Global Edge Network         │
-│ ├── 300+ PoPs worldwide                │
-│ ├── Automatic SSL/TLS                  │
-│ └── DDoS Protection                    │
+│ Cloudflare Edge Network (Global CDN)    │
 ├─────────────────────────────────────────┤
-│ Cloudflare Pages                       │
-│ ├── Static Site Hosting                │
-│ ├── Preview Deployments                │
-│ └── Branch Deployments                 │
+│ Cloudflare Pages (Static Hosting)       │
+│ ├── Production Branch (main)            │
+│ ├── Preview Branches (preview/*)        │
+│ └── Feature Branches (feature/*)        │
 ├─────────────────────────────────────────┤
-│ External Backend                       │
-│ └── Supabase (PostgreSQL + Realtime)   │
+│ Next.js Static Export                   │
+│ ├── Pre-rendered pages                  │
+│ ├── Client-side routing                 │
+│ └── Optimized assets                    │
+├─────────────────────────────────────────┤
+│ External Services                       │
+│ ├── Supabase (Database)                 │
+│ └── GitHub (Source Control)             │
 └─────────────────────────────────────────┘
 ```
 
-### 🛠️ Deployment Commands
+## 🔄 Deployment Workflow
 
-#### Quick Deploy
+### 1. Development → Preview
 ```bash
-# Production deployment
-./deploy.sh production "Your commit message"
+# Create feature branch
+git checkout -b preview/feature-name
 
-# Preview deployment
-./deploy.sh staging "Testing new features"
+# Make changes and commit
+git add -A
+git commit -m "feat: description"
+
+# Push to create preview
+git push -u origin preview/feature-name
+
+# Build and deploy
+npm run pages:build
+npx wrangler pages deploy .vercel/output/static \
+  --project-name=mss-melaka-2025 \
+  --branch=preview-feature-name
 ```
 
-#### Manual Deploy
+### 2. Preview → Production
 ```bash
-# Build for Cloudflare Pages
-npm run pages:build
+# After testing preview, merge to main
+git checkout main
+git merge preview/feature-name
 
 # Deploy to production
-npx wrangler pages deploy .vercel/output/static \
-  --project-name=mss-melaka-basketball \
-  --branch=main \
-  --commit-message="Your deployment message"
-
-# Deploy preview branch
-npx wrangler pages deploy .vercel/output/static \
-  --project-name=mss-melaka-basketball \
-  --branch=preview-feature-name \
-  --commit-message="Preview: Feature description"
-```
-
-### 🔧 Configuration Files
-
-#### `pages.config.json`
-```json
-{
-  "name": "mss-melaka-basketball",
-  "compatibility_date": "2024-01-01",
-  "production_branch": "main",
-  "build_config": {
-    "build_command": "npm run build",
-    "build_output_directory": "out"
-  }
-}
-```
-
-#### Environment Variables
-The app uses public environment variables from `.env.production`:
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-
-### 📈 Performance Optimizations
-
-1. **Edge Caching**: All static assets cached at Cloudflare edge
-2. **Compression**: Automatic Brotli/Gzip compression
-3. **HTTP/3**: Latest protocol support for faster connections
-4. **Smart Routing**: Anycast routing to nearest edge location
-
-### 🔒 Security Features
-
-- **SSL/TLS**: Automatic HTTPS with managed certificates
-- **DDoS Protection**: Enterprise-grade protection included
-- **Web Application Firewall**: Basic rules enabled
-- **Bot Protection**: Challenge suspicious traffic
-
-### 🚀 CI/CD Integration
-
-#### GitHub Actions (Optional)
-```yaml
-name: Deploy to Cloudflare Pages
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          
-      - name: Install dependencies
-        run: npm ci
-        
-      - name: Build
-        run: npm run pages:build
-        
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .vercel/output/static --project-name=mss-melaka-basketball
-```
-
-### 📊 Monitoring & Analytics
-
-Access analytics at: https://dash.cloudflare.com
-
-Key metrics to monitor:
-- Page views and unique visitors
-- Performance metrics (Core Web Vitals)
-- Error rates and 4xx/5xx responses
-- Geographic distribution of users
-
-### 🆘 Troubleshooting
-
-#### Build Failures
-```bash
-# Clean build cache
-rm -rf .next .vercel
-
-# Rebuild
 npm run pages:build
+npx wrangler pages deploy .vercel/output/static \
+  --project-name=mss-melaka-2025 \
+  --branch=main
 ```
 
-#### Deployment Issues
+## 🔒 Environment Configuration
+
+### Preview Environment
+- **Branch Pattern**: `preview/*`, `feature/*`
+- **URL Format**: `https://[branch-name].mss-melaka-2025.pages.dev`
+- **Environment**: Development/Staging
+- **Supabase**: Using production database (be careful!)
+
+### Production Environment
+- **Branch**: `main`
+- **URL**: `https://mss-melaka-2025.pages.dev`
+- **Custom Domain**: Can be added in Cloudflare dashboard
+- **Caching**: Full CDN caching enabled
+
+## 📊 Performance Optimizations
+
+### Current Setup
+- **Static Export**: Pre-rendered pages for instant loading
+- **CDN Distribution**: Global edge network
+- **Asset Optimization**: Next.js automatic optimization
+- **Image Optimization**: Next/Image with lazy loading
+
+### Metrics to Monitor
+1. **Core Web Vitals**
+   - LCP: < 2.5s (target)
+   - FID: < 100ms (target)
+   - CLS: < 0.1 (target)
+
+2. **Cloudflare Analytics**
+   - Page views
+   - Unique visitors
+   - Performance metrics
+   - Error rates
+
+## 🛠️ Deployment Commands
+
 ```bash
-# Check Cloudflare authentication
-npx wrangler whoami
+# Build for production
+npm run pages:build
 
-# List recent deployments
-npx wrangler pages deployment list --project-name=mss-melaka-basketball
+# Deploy to preview branch
+npm run deploy:preview
+
+# Deploy to production
+npm run deploy:production
+
+# Check deployment status
+npx wrangler pages deployment list --project-name=mss-melaka-2025
+
+# View deployment logs
+npx wrangler pages deployment tail --project-name=mss-melaka-2025
 ```
 
-#### Rollback Deployment
+## 🔍 Testing Checklist
+
+### Preview Testing
+- [ ] All UI improvements visible
+- [ ] Mobile responsiveness working
+- [ ] Database connections functional
+- [ ] Real-time updates working
+- [ ] No console errors
+
+### Pre-Production Checklist
+- [ ] Performance metrics acceptable
+- [ ] All features tested on preview
+- [ ] No breaking changes
+- [ ] Database migrations complete
+- [ ] Environment variables set
+
+## 🚨 Rollback Procedure
+
+If issues are found in production:
+
 ```bash
-# List deployments to find previous version
-npx wrangler pages deployment list --project-name=mss-melaka-basketball
+# View recent deployments
+npx wrangler pages deployment list --project-name=mss-melaka-2025
 
-# Rollback to specific deployment
-npx wrangler pages deployment rollback <deployment-id> --project-name=mss-melaka-basketball
+# Rollback to previous deployment
+npx wrangler pages rollback --project-name=mss-melaka-2025 \
+  --deployment-id=[previous-deployment-id]
 ```
 
-### 💰 Cost Analysis
+## 💰 Cost Considerations
 
-**Cloudflare Pages Free Tier Includes**:
+**Current Plan**: Cloudflare Pages Free
+- ✅ 500 builds/month
 - ✅ Unlimited requests
 - ✅ Unlimited bandwidth
-- ✅ 500 builds per month
-- ✅ Unlimited sites
-- ✅ Unlimited preview deployments
+- ✅ Preview deployments
 
-**Current Usage**: Well within free tier limits
+**Scaling Considerations**:
+- Move to Pages Pro ($20/month) for:
+  - 5,000 builds/month
+  - Advanced analytics
+  - Faster builds
 
-### 🎯 Best Practices
+## 📝 Next Steps
 
-1. **Branch Strategy**:
-   - `main`: Production deployments
-   - `preview-*`: Feature previews
-   - `staging`: Pre-production testing
+1. **Test Preview Deployment**
+   - Visit: https://preview-ui-improvements.mss-melaka-2025.pages.dev
+   - Test all UI improvements
+   - Check mobile/desktop views
 
-2. **Deployment Checklist**:
-   - [ ] Run tests locally
-   - [ ] Build successfully
-   - [ ] Test on preview deployment
-   - [ ] Deploy to production
-   - [ ] Verify live site
-
-3. **Performance Tips**:
-   - Keep bundle size under 1MB
-   - Use Next.js Image optimization
-   - Leverage Cloudflare caching headers
-   - Monitor Core Web Vitals
-
-### 📱 Custom Domain Setup (Future)
-
-When ready to add custom domain:
-
-1. Add domain in Cloudflare Pages dashboard
-2. Update DNS records:
+2. **Promote to Production** (when ready)
+   ```bash
+   git checkout main
+   git merge preview/ui-improvements
+   git push
+   npm run deploy:production
    ```
-   Type: CNAME
-   Name: @
-   Target: mss-melaka-basketball.pages.dev
-   ```
-3. SSL certificate auto-provisioned
 
-### 🔄 Recent Deployments
+3. **Monitor Performance**
+   - Check Cloudflare Analytics
+   - Monitor real-time updates
+   - Track user engagement
 
-- **Latest**: Updated UI - Removed division filters, added visual indicators
-- **Preview**: https://e7e781d9.mss-melaka-basketball.pages.dev
-- **Status**: ✅ Live and operational
+## 🔗 Useful Links
 
----
-
-**Support**: For deployment issues, check [Cloudflare Pages Docs](https://developers.cloudflare.com/pages/) or run `npx wrangler pages --help`
+- **Preview Deployment**: https://preview-ui-improvements.mss-melaka-2025.pages.dev
+- **Production Site**: https://mss-melaka-2025.pages.dev
+- **Cloudflare Dashboard**: https://dash.cloudflare.com
+- **GitHub Repository**: https://github.com/zeidalqadri/cbl_tourney
