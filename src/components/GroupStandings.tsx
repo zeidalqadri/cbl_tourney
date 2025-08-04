@@ -160,11 +160,6 @@ export default function GroupStandings({ groupName, division }: GroupStandingsPr
           </tbody>
         </table>
       </div>
-      
-      <div className="mt-4 text-xs text-gray-500">
-        <p>P = Played, W = Won, L = Lost, PF = Points For, PA = Points Against, +/- = Point Differential, Pts = Points</p>
-        <p className="mt-1">Points: Win = 2 pts, Loss = 1 pt</p>
-      </div>
     </div>
   )
 }

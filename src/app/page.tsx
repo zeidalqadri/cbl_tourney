@@ -46,17 +46,29 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
-                {/* Logo placeholders - will be replaced with actual logos */}
-                <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center">
-                  <span className="text-mss-turquoise font-bold">MSS</span>
+                {/* Organization logos */}
+                <div className="w-12 h-12 bg-white rounded-lg p-1 flex items-center justify-center">
+                  <Image 
+                    src="/mss-logo.png" 
+                    alt="Majlis Sukan Sekolah Melaka" 
+                    width={44} 
+                    height={44} 
+                    className="object-contain"
+                  />
                 </div>
-                <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center">
-                  <span className="text-cbl-orange font-bold">CBL</span>
+                <div className="w-12 h-12 bg-white rounded-lg p-1 flex items-center justify-center">
+                  <Image 
+                    src="/cbl-logo.png" 
+                    alt="CBL Fastbreak" 
+                    width={44} 
+                    height={44} 
+                    className="object-contain"
+                  />
                 </div>
               </div>
               <div>
-                <h1 className="text-3xl font-display tracking-wide gradient-text">MSS MELAKA BASKETBALL 2025</h1>
-                <p className="text-sm text-gray-300 font-medium tracking-wider">U12 TOURNAMENT CHAMPIONSHIP</p>
+                <h1 className="text-3xl font-display tracking-wide gradient-text">Majlis Sukan Sekolah Melaka Basketball 2025</h1>
+                <p className="text-sm text-gray-300 font-medium tracking-wider">U-12 • August 4-7, 2025 • Melaka</p>
               </div>
             </div>
             <div className="hidden md:flex items-center gap-6 text-sm">

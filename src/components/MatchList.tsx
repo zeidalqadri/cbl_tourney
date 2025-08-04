@@ -8,13 +8,13 @@ import EnhancedMatchCard from './EnhancedMatchCard'
 import { Calendar, Trophy, Users } from 'lucide-react'
 
 export default function MatchList() {
-  const [matches, setMatches] = useState<Match[]>([])
+  const [allMatches, setAllMatches] = useState<Match[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedDate, setSelectedDate] = useState('2025-08-04')
 
   useEffect(() => {
     loadMatches()
-  }, [selectedDate])
+  }, [])
 
   useEffect(() => {
     // Subscribe to real-time updates
@@ -28,10 +28,9 @@ export default function MatchList() {
   async function loadMatches() {
     setLoading(true)
     try {
-      const data = await getMatches({
-        date: selectedDate
-      })
-      setMatches(data)
+      // Load ALL matches without date filter
+      const data = await getMatches()
+      setAllMatches(data)
     } catch (error) {
       console.error('Error loading matches:', error)
     } finally {
@@ -58,7 +57,7 @@ export default function MatchList() {
     )
   }
 
-  const currentDayMatches = matches.filter(m => m.date === selectedDate)
+  const currentDayMatches = allMatches.filter(m => m.date === selectedDate)
 
   return (
     <div className="space-y-6">
@@ -71,7 +70,7 @@ export default function MatchList() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {dates.map(({ date, label }) => {
             const isActive = selectedDate === date
-            const dayMatches = matches.filter(m => m.date === date)
+            const dayMatches = allMatches.filter(m => m.date === date)
             const hasLive = dayMatches.some(m => m.status === 'in_progress')
             
             return (
