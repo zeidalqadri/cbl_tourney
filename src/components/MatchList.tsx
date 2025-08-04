@@ -7,6 +7,7 @@ import { getMatches, subscribeToMatches } from '@/lib/tournament-api'
 import EnhancedMatchCard from './EnhancedMatchCard'
 import { Calendar, Trophy, Users } from 'lucide-react'
 
+// Displays all tournament matches grouped by date with real-time updates
 export default function MatchList() {
   const [allMatches, setAllMatches] = useState<Match[]>([])
   const [loading, setLoading] = useState(true)
