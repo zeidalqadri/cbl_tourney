@@ -39,10 +39,10 @@ export default function MatchList() {
   }
 
   const dates = [
-    { date: '2025-08-04', label: 'Day 1 - Group Stage' },
-    { date: '2025-08-05', label: 'Day 2 - Group Stage' },
-    { date: '2025-08-06', label: 'Day 3 - Knockout' },
-    { date: '2025-08-07', label: 'Day 4 - Finals' }
+    { date: '2025-08-04', label: 'Day 1 - Group Stage', matchCount: null },
+    { date: '2025-08-05', label: 'Day 2 - Group Stage', matchCount: null },
+    { date: '2025-08-06', label: 'Day 3 - Knockout', matchCount: 'TBD' },
+    { date: '2025-08-07', label: 'Day 4 - Finals', matchCount: 'TBD' }
   ]
 
   if (loading) {
@@ -68,10 +68,11 @@ export default function MatchList() {
           <h2 className="font-display text-xl">TOURNAMENT SCHEDULE</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {dates.map(({ date, label }) => {
+          {dates.map(({ date, label, matchCount }) => {
             const isActive = selectedDate === date
             const dayMatches = allMatches.filter(m => m.date === date)
             const hasLive = dayMatches.some(m => m.status === 'in_progress')
+            const displayMatchCount = matchCount || dayMatches.length
             
             return (
               <button
@@ -96,7 +97,7 @@ export default function MatchList() {
                   {label.split(' - ')[1]}
                 </div>
                 <div className="text-xs mt-2 font-display">
-                  {dayMatches.length} MATCHES
+                  {displayMatchCount} {typeof displayMatchCount === 'string' ? '' : 'MATCHES'}
                 </div>
               </button>
             )
@@ -123,7 +124,21 @@ export default function MatchList() {
       ) : (
         <div className="text-center py-16">
           <Trophy className="w-16 h-16 mx-auto text-gray-300 dark:text-gray-700 mb-4" />
-          <p className="text-gray-500 dark:text-gray-400">No matches scheduled for this day</p>
+          {selectedDate === '2025-08-06' || selectedDate === '2025-08-07' ? (
+            <div className="space-y-2">
+              <p className="text-gray-600 dark:text-gray-400 font-medium">
+                {selectedDate === '2025-08-06' ? 'Knockout Stage' : 'Finals'}
+              </p>
+              <p className="text-gray-500 dark:text-gray-400">
+                Matches will be determined after group stage completion
+              </p>
+              <p className="text-sm text-gray-400">
+                Top teams from each group will advance
+              </p>
+            </div>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400">No matches scheduled for this day</p>
+          )}
         </div>
       )}
     </div>
