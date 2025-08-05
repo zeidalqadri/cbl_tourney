@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 
-export function MatchCoverageStatus({ venue }) {
+export function MatchCoverageStatus({ venue }: { venue: string }) {
   const [coverage, setCoverage] = useState(null);
   
   useEffect(() => {

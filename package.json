@@ -12,6 +12,7 @@
     "pages:dev": "npx wrangler pages dev .vercel/output/static --compatibility-date=2024-01-01 --compatibility-flags=nodejs_compat"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.53.0",
     "@types/html2canvas": "^0.5.35",
     "@types/node": "^20",

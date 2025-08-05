@@ -2,95 +2,118 @@
 
 import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { 
   Upload, 
   Camera, 
   X, 
   Check, 
   Loader2,
-  Image as ImageIcon,
-  MapPin,
-  Hash
+  Trash2 
 } from 'lucide-react'
+import Image from 'next/image'
 
-interface PhotoUploadProps {
-  onClose?: () => void
-}
-
-interface UploadPhoto {
-  id: string
+interface Photo {
   file: File
   preview: string
   caption: string
 }
 
-export default function PhotoUpload({ onClose }: PhotoUploadProps) {
-  const [photos, setPhotos] = useState<UploadPhoto[]>([])
-  const [venue, setVenue] = useState<'SJKC YU HWA' | 'SJKC MALIM'>('SJKC MALIM')
+interface PhotoUploadProps {
+  onClose?: () => void
+  matchId?: string
+  venue?: string
+}
+
+export default function PhotoUpload({ onClose, matchId, venue: initialVenue }: PhotoUploadProps) {
+  const [photos, setPhotos] = useState<Photo[]>([])
+  const [venue, setVenue] = useState(initialVenue || 'SJKC YU HWA')
   const [matchNumber, setMatchNumber] = useState('')
   const [division, setDivision] = useState<'boys' | 'girls'>('boys')
   const [photographer, setPhotographer] = useState('')
   const [uploading, setUploading] = useState(false)
   const [uploadSuccess, setUploadSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     
-    const newPhotos = files.map(file => ({
-      id: crypto.randomUUID(),
-      file,
-      preview: URL.createObjectURL(file),
-      caption: ''
-    }))
+    const newPhotos = await Promise.all(
+      files.map(async (file) => ({
+        file,
+        preview: URL.createObjectURL(file),
+        caption: ''
+      }))
+    )
     
-    setPhotos(prev => [...prev, ...newPhotos])
+    setPhotos([...photos, ...newPhotos])
   }
 
-  const removePhoto = (id: string) => {
-    setPhotos(prev => {
-      const photo = prev.find(p => p.id === id)
-      if (photo) {
-        URL.revokeObjectURL(photo.preview)
-      }
-      return prev.filter(p => p.id !== id)
-    })
+  const removePhoto = (index: number) => {
+    URL.revokeObjectURL(photos[index].preview)
+    setPhotos(photos.filter((_, i) => i !== index))
   }
 
-  const updateCaption = (id: string, caption: string) => {
-    setPhotos(prev => prev.map(p => 
-      p.id === id ? { ...p, caption } : p
-    ))
+  const updateCaption = (index: number, caption: string) => {
+    const updated = [...photos]
+    updated[index].caption = caption
+    setPhotos(updated)
   }
 
   const handleUpload = async () => {
     if (!matchNumber || photos.length === 0) return
-
     setUploading(true)
+    setError(null)
+    
+    const supabase = createClientComponentClient()
+    
     try {
-      // In a real implementation, you would upload photos to storage first
-      // For now, we'll simulate with URLs
-      const photoData = photos.map(photo => ({
-        url: photo.preview, // In production, upload to storage and get URL
-        thumbnail: photo.preview,
-        caption: photo.caption,
-        photographer: photographer || 'Tournament Photographer'
-      }))
+      // Find the match ID
+      const { data: matches, error: matchError } = await supabase
+        .from('matches')
+        .select('id')
+        .eq('venue', venue)
+        .eq('match_number', parseInt(matchNumber))
+        .eq('division', division)
+        .single()
+      
+      if (matchError || !matches) {
+        throw new Error('Match not found. Please check the match number and venue.')
+      }
+
+      // Create FormData for file upload
+      const formData = new FormData()
+      
+      // Add files to FormData
+      photos.forEach((photo) => {
+        if (photo.file) {
+          formData.append('files', photo.file)
+        }
+      })
+      
+      // Add metadata
+      formData.append('matchId', matches.id)
+      formData.append('venue', venue)
+      formData.append('photographerName', photographer || 'Tournament Photographer')
+      
+      // Add captions as JSON
+      const captions = photos.reduce((acc, photo, index) => {
+        acc[index] = photo.caption
+        return acc
+      }, {} as Record<number, string>)
+      formData.append('captions', JSON.stringify(captions))
 
       const response = await fetch('/api/media/upload', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          venue,
-          matchNumber: parseInt(matchNumber),
-          division,
-          uploadType: 'photos',
-          content: { photos: photoData },
-          uploadedBy: photographer || 'Tournament Photographer'
-        })
+        body: formData
       })
 
       const result = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(result.error || 'Upload failed')
+      }
       
       if (result.success) {
         setUploadSuccess(true)
@@ -100,6 +123,7 @@ export default function PhotoUpload({ onClose }: PhotoUploadProps) {
       }
     } catch (error) {
       console.error('Upload failed:', error)
+      setError(error instanceof Error ? error.message : 'Upload failed. Please try again.')
     } finally {
       setUploading(false)
     }
@@ -150,13 +174,20 @@ export default function PhotoUpload({ onClose }: PhotoUploadProps) {
             </motion.div>
           ) : (
             <>
+              {/* Error Display */}
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                  {error}
+                </div>
+              )}
+
               {/* Match Info */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Venue</label>
                   <select
                     value={venue}
-                    onChange={(e) => setVenue(e.target.value as any)}
+                    onChange={(e) => setVenue(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-mss-turquoise focus:border-transparent"
                   >
                     <option value="SJKC YU HWA">SJKC YU HWA</option>
@@ -168,23 +199,21 @@ export default function PhotoUpload({ onClose }: PhotoUploadProps) {
                   <label className="block text-sm font-medium mb-2">
                     Match Number
                   </label>
-                  <div className="relative">
-                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input
-                      type="number"
-                      value={matchNumber}
-                      onChange={(e) => setMatchNumber(e.target.value)}
-                      placeholder="45"
-                      className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-mss-turquoise focus:border-transparent"
-                    />
-                  </div>
+                  <input
+                    type="number"
+                    value={matchNumber}
+                    onChange={(e) => setMatchNumber(e.target.value)}
+                    placeholder="e.g. 42"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-mss-turquoise focus:border-transparent"
+                    required
+                  />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium mb-2">Division</label>
                   <select
                     value={division}
-                    onChange={(e) => setDivision(e.target.value as any)}
+                    onChange={(e) => setDivision(e.target.value as 'boys' | 'girls')}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-mss-turquoise focus:border-transparent"
                   >
                     <option value="boys">Boys</option>
@@ -193,7 +222,7 @@ export default function PhotoUpload({ onClose }: PhotoUploadProps) {
                 </div>
               </div>
 
-              {/* Photographer */}
+              {/* Photographer Info */}
               <div>
                 <label className="block text-sm font-medium mb-2">
                   Photographer Name (Optional)
@@ -202,67 +231,74 @@ export default function PhotoUpload({ onClose }: PhotoUploadProps) {
                   type="text"
                   value={photographer}
                   onChange={(e) => setPhotographer(e.target.value)}
-                  placeholder="John Doe"
+                  placeholder="Enter photographer name"
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-mss-turquoise focus:border-transparent"
                 />
               </div>
 
               {/* Photo Upload Area */}
               <div>
-                <label className="block text-sm font-medium mb-2">Photos</label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+                
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full p-8 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl hover:border-mss-turquoise transition-colors"
+                >
+                  <Upload className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Click to select photos or drag and drop
+                  </p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    JPG, PNG or WebP (max 10MB each)
+                  </p>
+                </button>
+              </div>
+
+              {/* Selected Photos */}
+              {photos.length > 0 && (
                 <div className="space-y-4">
-                  {/* Upload Button */}
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-full py-8 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg hover:border-mss-turquoise transition-colors group"
-                  >
-                    <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400 group-hover:text-mss-turquoise" />
-                    <p className="text-gray-500 group-hover:text-mss-turquoise">
-                      Click to upload photos
-                    </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      JPG, PNG up to 10MB each
-                    </p>
-                  </button>
-
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleFileSelect}
-                    className="hidden"
-                  />
-
-                  {/* Photo Previews */}
-                  {photos.length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {photos.map(photo => (
-                        <div key={photo.id} className="relative group">
-                          <img
+                  <h3 className="font-medium">Selected Photos ({photos.length})</h3>
+                  <div className="space-y-3">
+                    {photos.map((photo, index) => (
+                      <div key={index} className="flex gap-4 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                        <div className="relative w-20 h-20 flex-shrink-0">
+                          <Image
                             src={photo.preview}
-                            alt="Upload preview"
-                            className="w-full aspect-square object-cover rounded-lg"
-                          />
-                          <button
-                            onClick={() => removePhoto(photo.id)}
-                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                          <input
-                            type="text"
-                            placeholder="Add caption..."
-                            value={photo.caption}
-                            onChange={(e) => updateCaption(photo.id, e.target.value)}
-                            className="absolute bottom-0 left-0 right-0 px-2 py-1 bg-black/70 text-white text-xs placeholder-white/70 border-0 focus:outline-none"
+                            alt={`Photo ${index + 1}`}
+                            fill
+                            className="object-cover rounded-lg"
                           />
                         </div>
-                      ))}
-                    </div>
-                  )}
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            value={photo.caption}
+                            onChange={(e) => updateCaption(index, e.target.value)}
+                            placeholder="Add caption (optional)"
+                            className="w-full px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-700 rounded focus:ring-1 focus:ring-mss-turquoise"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">
+                            {photo.file.name} ({(photo.file.size / 1024 / 1024).toFixed(1)}MB)
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => removePhoto(index)}
+                          className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           )}
         </div>
