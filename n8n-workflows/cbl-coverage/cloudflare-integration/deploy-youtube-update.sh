@@ -1,3 +1,10 @@
+#!/bin/bash
+
+echo "📺 Deploying YouTube Integration to Cloudflare Worker"
+echo "===================================================="
+
+# First, let's merge the YouTube functionality into the main worker
+cat > coverage-worker-complete.js << 'EOF'
 /**
  * Cloudflare Worker for CBL Coverage with YouTube Integration
  */
@@ -368,3 +375,15 @@ async function handleAirtableWebhook(request, env, corsHeaders) {
   
   return handleUpdateCoverage(updateRequest, env, corsHeaders);
 }
+EOF
+
+echo "✅ Worker code updated with YouTube integration"
+echo ""
+echo "📝 Next steps:"
+echo "1. Set your YouTube channel ID in wrangler.toml"
+echo "2. Add your YouTube API key as a secret:"
+echo "   npx wrangler secret put YOUTUBE_API_KEY"
+echo "3. Deploy the updated worker:"
+echo "   npx wrangler deploy"
+echo ""
+echo "Make sure to update wrangler.toml with your channel ID!"

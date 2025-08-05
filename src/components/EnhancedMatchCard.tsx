@@ -11,6 +11,7 @@ import { MediaContent } from '@/types/media'
 // import { useRealtimeMedia } from '@/hooks/useRealtimeMedia'
 import { getMatchMedia } from '@/lib/media-api'
 import { MatchCoverageBadge } from './MatchCoverage'
+import { MatchVideoBadge, MatchVideoLink } from './MatchVideoLink'
 
 interface EnhancedMatchCardProps {
   match: Match
@@ -113,6 +114,7 @@ export default function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
               {match.division === 'boys' ? 'BOYS' : 'GIRLS'}
             </span>
             <MatchCoverageBadge venue={match.venue} />
+            <MatchVideoBadge match={match} />
           </div>
           {isLive && (
             <div className="flex items-center gap-2 text-live-pulse">
