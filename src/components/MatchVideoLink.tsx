@@ -64,34 +64,57 @@ export function MatchVideoLink({ match, className = '' }: MatchVideoLinkProps) {
         return;
       }
 
-      // Search for recorded matches with multiple strategies
-      const teamNames = [match.teamA?.name, match.teamB?.name].filter(Boolean).join(' vs ');
+      // Search channel's video list with actual team names (up to 50 videos)
+      const teamAName = match.teamA?.name?.toLowerCase() || '';
+      const teamBName = match.teamB?.name?.toLowerCase() || '';
+      
       const searchQueries = [
         `Match #${match.matchNumber}`, // Primary: match number
-        teamNames, // Secondary: team names
-        `${match.teamA?.name} ${match.teamB?.name}`, // Team names together
-        `${match.venue} ${new Date(match.date).toLocaleDateString()}` // Venue and date
+        `${match.teamA?.name} vs ${match.teamB?.name}`, // Team A vs Team B
+        `${match.teamB?.name} vs ${match.teamA?.name}`, // Team B vs Team A
+        `${match.teamA?.name} ${match.teamB?.name}`, // Both team names
+        match.teamA?.name, // Just Team A
+        match.teamB?.name  // Just Team B
       ].filter(Boolean);
 
       for (const query of searchQueries) {
         const searchResponse = await fetch(
-          `${API_URL}/api/youtube/search?q=${encodeURIComponent(query)}`
+          `${API_URL}/api/youtube/search?q=${encodeURIComponent(query)}&limit=50`
         );
         const searchData = await searchResponse.json();
 
         if (searchData.videos?.length > 0) {
-          // Further filter results to ensure relevance
+          // Look through channel videos for the best match
           const relevantVideo = searchData.videos.find((v: any) => {
             const titleLower = v.title.toLowerCase();
-            const teamAName = match.teamA?.name?.toLowerCase() || '';
-            const teamBName = match.teamB?.name?.toLowerCase() || '';
             
-            // Check if it contains match number
-            if (titleLower.includes(`match #${match.matchNumber}`)) return true;
+            // Strong match: Contains match number
+            if (titleLower.includes(`match #${match.matchNumber}`) || 
+                titleLower.includes(`match${match.matchNumber}`) ||
+                titleLower.includes(`#${match.matchNumber}`)) {
+              return true;
+            }
             
-            // Check if it contains both team names
+            // Good match: Contains both team names
             if (teamAName && teamBName) {
-              return titleLower.includes(teamAName) && titleLower.includes(teamBName);
+              const hasTeamA = titleLower.includes(teamAName);
+              const hasTeamB = titleLower.includes(teamBName);
+              
+              if (hasTeamA && hasTeamB) {
+                return true;
+              }
+            }
+            
+            // Weak match: Contains one team name and looks like a match video
+            if ((teamAName && titleLower.includes(teamAName)) || 
+                (teamBName && titleLower.includes(teamBName))) {
+              // Check if it looks like a match video
+              if (titleLower.includes('vs') || 
+                  titleLower.includes('match') || 
+                  titleLower.includes('court') ||
+                  titleLower.includes('game')) {
+                return true;
+              }
             }
             
             return false;
@@ -213,16 +236,6 @@ export function MatchVideoBadge({ match }: { match: Match }) {
 
   const checkForVideo = async () => {
     try {
-      // TEMPORARY: Add mock data for testing - remove this in production
-      const isMockMode = window.location.hostname.includes('pages.dev') || window.location.hostname === 'localhost';
-      
-      if (isMockMode && (match.matchNumber <= 5 || match.matchNumber % 3 === 0)) {
-        // Show video badge for first 5 matches and every 3rd match for testing
-        setHasVideo(true);
-        setIsLive(match.matchNumber <= 2); // First 2 matches are "live" for testing
-        return;
-      }
-      
       // Check live streams first
       const liveResponse = await fetch('https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/live');
       const liveData = await liveResponse.json();
@@ -250,36 +263,84 @@ export function MatchVideoBadge({ match }: { match: Match }) {
         return;
       }
       
-      // Check recorded videos with team names
-      const teamNames = [match.teamA?.name, match.teamB?.name].filter(Boolean).join(' ');
-      const response = await fetch(
-        `https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/search?q=${encodeURIComponent(teamNames || `Match #${match.matchNumber}`)}`
-      );
-      const data = await response.json();
+      // Search channel's video list with actual team names (up to 50 videos)
+      const teamAName = match.teamA?.name?.toLowerCase() || '';
+      const teamBName = match.teamB?.name?.toLowerCase() || '';
       
-      if (data.videos?.length > 0) {
-        // Verify the video is actually for this match
-        const hasRelevantVideo = data.videos.some((v: any) => {
-          const titleLower = v.title.toLowerCase();
-          const teamAName = match.teamA?.name?.toLowerCase() || '';
-          const teamBName = match.teamB?.name?.toLowerCase() || '';
-          
-          // Check match number
-          if (titleLower.includes(`match #${match.matchNumber}`)) return true;
-          
-          // Check team names
-          if (teamAName && teamBName) {
-            return titleLower.includes(teamAName) && titleLower.includes(teamBName);
-          }
-          
-          return false;
-        });
-        
-        setHasVideo(hasRelevantVideo);
-        setIsLive(false);
-      } else {
-        setHasVideo(false);
+      // Try multiple search strategies with channel videos
+      const searchQueries = [];
+      
+      // Primary: Match number
+      searchQueries.push(`Match #${match.matchNumber}`);
+      
+      // Secondary: Both team names (various combinations)
+      if (teamAName && teamBName) {
+        searchQueries.push(`${match.teamA.name} vs ${match.teamB.name}`);
+        searchQueries.push(`${match.teamB.name} vs ${match.teamA.name}`);
+        searchQueries.push(`${match.teamA.name} ${match.teamB.name}`);
+        searchQueries.push(`${match.teamB.name} ${match.teamA.name}`);
       }
+      
+      // Tertiary: Individual team names with match context
+      if (teamAName) {
+        searchQueries.push(match.teamA.name);
+      }
+      if (teamBName) {
+        searchQueries.push(match.teamB.name);
+      }
+      
+      for (const query of searchQueries) {
+        const response = await fetch(
+          `https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/search?q=${encodeURIComponent(query)}&limit=50`
+        );
+        const data = await response.json();
+        
+        if (data.videos?.length > 0) {
+          // Look through channel videos for matches
+          const relevantVideo = data.videos.find((v: any) => {
+            const titleLower = v.title.toLowerCase();
+            
+            // Strong match: Contains match number
+            if (titleLower.includes(`match #${match.matchNumber}`) || 
+                titleLower.includes(`match${match.matchNumber}`) ||
+                titleLower.includes(`#${match.matchNumber}`)) {
+              return true;
+            }
+            
+            // Good match: Contains both team names
+            if (teamAName && teamBName) {
+              const hasTeamA = titleLower.includes(teamAName);
+              const hasTeamB = titleLower.includes(teamBName);
+              
+              if (hasTeamA && hasTeamB) {
+                return true;
+              }
+            }
+            
+            // Weak match: Contains one team name and looks like a match video
+            if ((teamAName && titleLower.includes(teamAName)) || 
+                (teamBName && titleLower.includes(teamBName))) {
+              // Check if it looks like a match video (contains vs, match, etc.)
+              if (titleLower.includes('vs') || 
+                  titleLower.includes('match') || 
+                  titleLower.includes('court') ||
+                  titleLower.includes('game')) {
+                return true;
+              }
+            }
+            
+            return false;
+          });
+          
+          if (relevantVideo) {
+            setHasVideo(true);
+            setIsLive(false);
+            return;
+          }
+        }
+      }
+      
+      setHasVideo(false);
     } catch (error) {
       console.error('Error checking for video:', error);
       setHasVideo(false);
