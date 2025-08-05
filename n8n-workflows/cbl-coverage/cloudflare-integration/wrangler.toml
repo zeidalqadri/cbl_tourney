@@ -10,7 +10,7 @@ id = "be3d02099e6149369eaa820a5a8f9440"
 # Environment variables
 [vars]
 ALLOWED_ORIGIN = "https://cbl-tourney.pages.dev"
-YOUTUBE_CHANNEL_ID = "UCqLDgaXvWmDQHiPWS7fL5Ag"
+YOUTUBE_CHANNEL_ID = "UCSTjgKoXJT41KMsqKnOTxZQ"
 
 # Add these as secrets using wrangler secret put
 # wrangler secret put YOUTUBE_API_KEY

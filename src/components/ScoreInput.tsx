@@ -33,7 +33,7 @@ export default function ScoreInput() {
       const eligibleMatches = allData.filter(match => {
         const isToday = match.date === today
         const isPast = match.date < today
-        const isUnscored = match.scoreA === 0 && match.scoreB === 0
+        const isUnscored = (match.scoreA === 0 || match.scoreA === null) && (match.scoreB === 0 || match.scoreB === null)
         
         return (
           // Today's scheduled matches
@@ -41,7 +41,7 @@ export default function ScoreInput() {
           // Today's in-progress 0-0 matches
           (isToday && match.status === 'in_progress' && isUnscored) ||
           // Past matches that are still 0-0 (ANY status - scheduled, in_progress, or completed)
-          (isPast && isUnscored && (match.status === 'scheduled' || match.status === 'in_progress' || match.status === 'completed'))
+          (isPast && isUnscored)
         )
       })
       

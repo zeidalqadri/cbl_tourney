@@ -11,7 +11,7 @@ export default function StreamView({ onLiveStatusChange }: StreamViewProps) {
   const [loading, setLoading] = useState(true)
   const [liveVideoId, setLiveVideoId] = useState<string | null>(null)
   // YouTube channel: https://www.youtube.com/@OrganizerCBL
-  const [channelId] = useState('UCqLDgaXvWmDQHiPWS7fL5Ag') // OrganizerCBL channel ID
+  const [channelId] = useState('UCSTjgKoXJT41KMsqKnOTxZQ') // OrganizerCBL channel ID
   
   useEffect(() => {
     checkLiveStream()
@@ -86,7 +86,7 @@ export default function StreamView({ onLiveStatusChange }: StreamViewProps) {
             />
           ) : (
             <iframe
-              src={`https://www.youtube.com/embed/videoseries?list=UU${channelId.substring(2)}`}
+              src={`https://www.youtube.com/embed/videoseries?list=UU${channelId.substring(2)}&rel=0&showinfo=1`}
               title="Everything CBL Channel Videos"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
