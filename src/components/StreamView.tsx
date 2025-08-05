@@ -10,7 +10,8 @@ interface StreamViewProps {
 export default function StreamView({ onLiveStatusChange }: StreamViewProps) {
   const [loading, setLoading] = useState(true)
   const [liveVideoId, setLiveVideoId] = useState<string | null>(null)
-  const [channelId] = useState('OrganizerCBL') // Everything CBL channel
+  // YouTube channel: https://www.youtube.com/@OrganizerCBL
+  const [channelId] = useState('UCqLDgaXvWmDQHiPWS7fL5Ag') // OrganizerCBL channel ID
   
   useEffect(() => {
     checkLiveStream()

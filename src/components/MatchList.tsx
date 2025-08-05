@@ -11,7 +11,25 @@ import { Calendar, Trophy, Users } from 'lucide-react'
 export default function MatchList() {
   const [allMatches, setAllMatches] = useState<Match[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedDate, setSelectedDate] = useState('2025-08-04')
+  
+  // Get current date in YYYY-MM-DD format
+  const getCurrentDate = () => {
+    const today = new Date()
+    return today.toISOString().split('T')[0]
+  }
+  
+  // Check if date is within tournament range
+  const isWithinTournamentDates = (date: string) => {
+    return date >= '2025-08-04' && date <= '2025-08-07'
+  }
+  
+  // Set initial date - use current date if within tournament, otherwise first day
+  const getInitialDate = () => {
+    const currentDate = getCurrentDate()
+    return isWithinTournamentDates(currentDate) ? currentDate : '2025-08-04'
+  }
+  
+  const [selectedDate, setSelectedDate] = useState(getInitialDate())
 
   useEffect(() => {
     loadMatches()
@@ -71,6 +89,7 @@ export default function MatchList() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {dates.map(({ date, label }) => {
             const isActive = selectedDate === date
+            const isToday = date === getCurrentDate()
             const dayMatches = allMatches.filter(m => m.date === date)
             const hasLive = dayMatches.some(m => m.status === 'in_progress')
             
@@ -86,6 +105,11 @@ export default function MatchList() {
               >
                 {hasLive && (
                   <div className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                )}
+                {isToday && (
+                  <div className="absolute top-2 left-2 bg-cbl-orange text-white text-xs px-2 py-0.5 rounded-full font-semibold">
+                    TODAY
+                  </div>
                 )}
                 <div className="text-sm font-medium opacity-80">
                   {new Date(date).toLocaleDateString('en-MY', { weekday: 'short' })}
