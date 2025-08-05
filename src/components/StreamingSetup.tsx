@@ -26,17 +26,30 @@ export function StreamingSetup({ onlyUpcoming = true }: StreamingSetupProps) {
     try {
       let query = supabase
         .from('matches')
-        .select('*')
-        .order('matchNumber', { ascending: true });
+        .select(`
+          *,
+          teamA:teams!matches_team_a_id_fkey(id, name:team_name),
+          teamB:teams!matches_team_b_id_fkey(id, name:team_name)
+        `)
+        .order('match_number', { ascending: true });
 
       if (onlyUpcoming) {
-        query = query.or('status.eq.upcoming,status.eq.in_progress');
+        query = query.or('status.eq.scheduled,status.eq.in_progress');
       }
 
       const { data, error } = await query;
       
       if (error) throw error;
-      setMatches(data || []);
+      
+      // Transform the data to match our interface
+      const transformedData = (data || []).map(match => ({
+        ...match,
+        matchNumber: match.match_number,
+        teamA: match.teamA?.[0] || { id: match.team_a_id, name: 'TBA' },
+        teamB: match.teamB?.[0] || { id: match.team_b_id, name: 'TBA' }
+      }));
+      
+      setMatches(transformedData);
     } catch (error) {
       console.error('Error fetching matches:', error);
     } finally {
@@ -282,14 +295,27 @@ export function StreamingQuickSetup() {
   const fetchUpcomingMatches = async () => {
     const { data } = await supabase
       .from('matches')
-      .select('*')
-      .or('status.eq.upcoming,status.eq.in_progress')
-      .order('scheduledTime', { ascending: true })
+      .select(`
+        *,
+        teamA:teams!matches_team_a_id_fkey(id, name:team_name),
+        teamB:teams!matches_team_b_id_fkey(id, name:team_name)
+      `)
+      .or('status.eq.scheduled,status.eq.in_progress')
+      .order('date', { ascending: true })
+      .order('time', { ascending: true })
       .limit(5);
     
-    setMatches(data || []);
-    if (data && data.length > 0) {
-      setSelectedMatch(data[0]);
+    // Transform the data to match our interface
+    const transformedData = (data || []).map(match => ({
+      ...match,
+      matchNumber: match.match_number,
+      teamA: match.teamA?.[0] || { id: match.team_a_id, name: 'TBA' },
+      teamB: match.teamB?.[0] || { id: match.team_b_id, name: 'TBA' }
+    }));
+    
+    setMatches(transformedData);
+    if (transformedData.length > 0) {
+      setSelectedMatch(transformedData[0]);
     }
   };
 
