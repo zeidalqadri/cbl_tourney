@@ -86,8 +86,8 @@ export default function StreamView({ onLiveStatusChange }: StreamViewProps) {
             />
           ) : (
             <iframe
-              src={`https://www.youtube.com/embed/live_stream?channel=${channelId}&autoplay=1&mute=1`}
-              title="Everything CBL Channel"
+              src={`https://www.youtube.com/embed/videoseries?list=UU${channelId.substring(2)}`}
+              title="Everything CBL Channel Videos"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               className="absolute inset-0 w-full h-full"
