@@ -68,7 +68,7 @@ export default function ScoreInput() {
   }
 
   return (
-    <div className="max-w-md mx-auto pb-8">
+    <div className="max-w-md mx-auto pb-20">
       <div className="bg-white rounded-lg shadow-sm p-6">
         <h2 className="text-xl font-bold mb-6">Update Match Score</h2>
         

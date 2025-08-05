@@ -158,7 +158,7 @@ export default function TournamentBracket() {
   const hasKnockoutMatches = allKnockoutMatches.length > 0
 
   return (
-    <div className="pb-8">
+    <div className="pb-20">
       <div className="bg-white rounded-lg shadow-sm p-6">
       <div className="flex items-center mb-6">
         <Trophy className="h-6 w-6 mr-2 text-yellow-500" />
