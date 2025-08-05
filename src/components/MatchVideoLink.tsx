@@ -213,6 +213,16 @@ export function MatchVideoBadge({ match }: { match: Match }) {
 
   const checkForVideo = async () => {
     try {
+      // TEMPORARY: Add mock data for testing - remove this in production
+      const isMockMode = window.location.hostname.includes('pages.dev') || window.location.hostname === 'localhost';
+      
+      if (isMockMode && (match.matchNumber <= 5 || match.matchNumber % 3 === 0)) {
+        // Show video badge for first 5 matches and every 3rd match for testing
+        setHasVideo(true);
+        setIsLive(match.matchNumber <= 2); // First 2 matches are "live" for testing
+        return;
+      }
+      
       // Check live streams first
       const liveResponse = await fetch('https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/live');
       const liveData = await liveResponse.json();

@@ -64,6 +64,21 @@ export default function StreamView({ onLiveStatusChange, selectedMatchNumber, se
     try {
       setLoading(true)
       
+      // TEMPORARY: Add mock data for testing - remove this in production
+      const isMockMode = window.location.hostname.includes('pages.dev') || window.location.hostname === 'localhost'
+      
+      if (isMockMode && (matchNumber <= 5 || matchNumber % 3 === 0)) {
+        // Create mock video for testing
+        const mockVideo = {
+          videoId: 'dQw4w9WgXcQ', // Rick Roll for demo :)
+          title: `🔴 LIVE: Match #${matchNumber} - ${selectedMatchDetails?.teamA || 'Team A'} vs ${selectedMatchDetails?.teamB || 'Team B'} - Boys @ Court 1`,
+          thumbnail: `https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg`,
+          isLive: matchNumber <= 2
+        }
+        setMatchVideo(mockVideo)
+        return
+      }
+      
       // First check if it's in live videos
       const liveResponse = await fetch('https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/live')
       const liveData = await liveResponse.json()
