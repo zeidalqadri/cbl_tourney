@@ -23,7 +23,7 @@ export function MatchVideoLink({ match, className = '' }: MatchVideoLinkProps) {
   const [loading, setLoading] = useState(true);
   const [showPlayer, setShowPlayer] = useState(false);
 
-  const API_URL = 'https://cbl-coverage-api.zeidalqadri.workers.dev';
+  const API_URL = 'https://cbl-youtube-api.zeidalqadri.workers.dev'; // New API - deploy simple-youtube-api.js to this URL
 
   useEffect(() => {
     findMatchVideo();
@@ -236,38 +236,8 @@ export function MatchVideoBadge({ match }: { match: Match }) {
 
   const checkForVideo = async () => {
     try {
-      // TEMPORARY: Use known video data from Everything CBL channel until API is fixed
-      const knownVideos = [
-        { teams: ['YU HWA', 'PAY FONG 1'], videoId: 'sampleVideoId1', title: 'MSSN Melaka U12 Grouping W YU HWA vs PAY FONG 1' },
-        { teams: ['CHABAU', 'JASIN LALANG'], videoId: 'sampleVideoId2', title: 'MSSN Melaka U12 Grouping W CHABAU vs JASIN LALANG' },
-        { teams: ['PAY FONG 2', 'NOTRE DAME'], videoId: 'sampleVideoId3', title: 'MSSN Melaka U12 Grouping W PAY FONG 2 vs NOTRE DAME' },
-        { teams: ['BKT BERUANG', 'YU YING'], videoId: 'sampleVideoId4', title: 'MSSN Melaka U12 Grouping W BKT BERUANG vs YU YING' },
-        { teams: ['MALIM', 'AYER KEROH'], videoId: 'sampleVideoId5', title: 'OMSSN Melaka U12 Grouping W MALIM vs AYER KEROH' },
-      ];
-
-      const teamAName = match.teamA?.name?.toUpperCase() || '';
-      const teamBName = match.teamB?.name?.toUpperCase() || '';
-
-      // Check if this match has a known video
-      const hasKnownVideo = knownVideos.some(video => {
-        const videoTeamA = video.teams[0];
-        const videoTeamB = video.teams[1];
-        
-        // Check both possible team orders
-        return (teamAName.includes(videoTeamA) && teamBName.includes(videoTeamB)) ||
-               (teamAName.includes(videoTeamB) && teamBName.includes(videoTeamA)) ||
-               (videoTeamA.includes(teamAName) && videoTeamB.includes(teamBName)) ||
-               (videoTeamB.includes(teamAName) && videoTeamA.includes(teamBName));
-      });
-
-      if (hasKnownVideo) {
-        setHasVideo(true);
-        setIsLive(false);
-        return;
-      }
-
       // Check live streams first
-      const liveResponse = await fetch('https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/live');
+      const liveResponse = await fetch('https://cbl-youtube-api.zeidalqadri.workers.dev/api/youtube/live');
       const liveData = await liveResponse.json();
       
       // Smart matching for live videos
@@ -305,7 +275,7 @@ export function MatchVideoBadge({ match }: { match: Match }) {
       
       for (const query of searchQueries) {
         const response = await fetch(
-          `https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/search?q=${encodeURIComponent(query)}&limit=50`
+          `https://cbl-youtube-api.zeidalqadri.workers.dev/api/youtube/search?q=${encodeURIComponent(query)}&limit=50`
         );
         const data = await response.json();
         
