@@ -4,8 +4,13 @@ import { useState, useEffect } from 'react'
 import { Match } from '@/types/tournament'
 import { formatTime } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Clock, MapPin, Users, TrendingUp, Zap, Share2 } from 'lucide-react'
-import ShareableMatchCard from './ShareableMatchCard'
+import { Clock, MapPin, Users, TrendingUp, Zap, Share2, Camera, Play } from 'lucide-react'
+import ShareModal from './ShareModal'
+import MediaViewer from './MediaViewer'
+import { MediaContent } from '@/types/media'
+// import { useRealtimeMedia } from '@/hooks/useRealtimeMedia'
+import { getMatchMedia } from '@/lib/media-api'
+import { MatchCoverageBadge } from './MatchCoverage'
 
 interface EnhancedMatchCardProps {
   match: Match
@@ -17,6 +22,10 @@ export default function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
   const [scoreAnimateA, setScoreAnimateA] = useState(false)
   const [scoreAnimateB, setScoreAnimateB] = useState(false)
   const [showShareCard, setShowShareCard] = useState(false)
+  const [showMedia, setShowMedia] = useState(false)
+  const [mediaContent, setMediaContent] = useState<MediaContent | null>(null)
+  const [loadingMedia, setLoadingMedia] = useState(false)
+  const lastUpdate = null
 
   useEffect(() => {
     if (match.scoreA !== prevScoreA) {
@@ -54,6 +63,26 @@ export default function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
 
   const winner = getWinner()
 
+  const handleMediaClick = async () => {
+    setShowMedia(!showMedia)
+    if (!showMedia && !mediaContent) {
+      setLoadingMedia(true)
+      try {
+        const result = await getMatchMedia(match.id)
+        if (result.success) {
+          setMediaContent(result.mediaContent)
+        }
+      } catch (error) {
+        console.error('Failed to fetch media:', error)
+      } finally {
+        setLoadingMedia(false)
+      }
+    }
+  }
+
+  // Show indicator for new media
+  const hasNewMedia = false
+
   return (
     <motion.div
       layout
@@ -83,6 +112,7 @@ export default function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
             }`}>
               {match.division === 'boys' ? 'BOYS' : 'GIRLS'}
             </span>
+            <MatchCoverageBadge venue={match.venue} />
           </div>
           {isLive && (
             <div className="flex items-center gap-2 text-live-pulse">
@@ -182,15 +212,66 @@ export default function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
               <span>{match.venue}</span>
             </div>
           </div>
-          <button
-            onClick={() => setShowShareCard(true)}
-            className="flex items-center gap-1 text-gray-500 hover:text-mss-turquoise transition-colors"
-          >
-            <Share2 className="w-4 h-4" />
-            <span className="font-medium">Share</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleMediaClick}
+              className={`relative flex items-center gap-1 px-3 py-1 rounded-lg transition-all ${
+                showMedia 
+                  ? 'bg-mss-turquoise text-white' 
+                  : 'text-gray-500 hover:text-mss-turquoise hover:bg-gray-100 dark:hover:bg-gray-700'
+              }`}
+            >
+              <Camera className="w-4 h-4" />
+              <span className="font-medium">Media</span>
+              {hasNewMedia && !showMedia && (
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+              )}
+            </button>
+            <button
+              onClick={() => setShowShareCard(true)}
+              className="flex items-center gap-1 text-gray-500 hover:text-mss-turquoise transition-colors"
+            >
+              <Share2 className="w-4 h-4" />
+              <span className="font-medium">Share</span>
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Media Section */}
+      <AnimatePresence>
+        {showMedia && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+              {loadingMedia ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mss-turquoise"></div>
+                </div>
+              ) : mediaContent ? (
+                <MediaViewer 
+                  mediaContent={mediaContent}
+                  matchNumber={match.matchNumber}
+                  teams={{
+                    teamA: match.teamA.name,
+                    teamB: match.teamB.name
+                  }}
+                />
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <Camera className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p>No media available</p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Particle Effects for Scores */}
       {(scoreAnimateA || scoreAnimateB) && (
@@ -219,7 +300,7 @@ export default function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
 
       {/* Share Modal */}
       {showShareCard && (
-        <ShareableMatchCard 
+        <ShareModal 
           match={match} 
           onClose={() => setShowShareCard(false)} 
         />

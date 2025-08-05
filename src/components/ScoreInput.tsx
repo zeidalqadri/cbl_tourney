@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { Match } from '@/types/tournament'
 import { getMatches, updateMatchScore } from '@/lib/tournament-api'
+import { Camera, Upload } from 'lucide-react'
+import PhotoUpload from './PhotoUpload'
 
 export default function ScoreInput() {
   const [matches, setMatches] = useState<Match[]>([])
@@ -11,6 +13,7 @@ export default function ScoreInput() {
   const [scoreB, setScoreB] = useState<string>('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [showPhotoUpload, setShowPhotoUpload] = useState(false)
 
   useEffect(() => {
     loadTodayMatches()
@@ -148,7 +151,31 @@ export default function ScoreInput() {
             <li>• Bracket will update in real-time</li>
           </ul>
         </div>
+
+        {/* Photo Upload Section */}
+        <div className="mt-6 bg-white rounded-lg shadow-sm p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Camera className="w-5 h-5" />
+            Media Upload
+          </h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Upload photos or videos for matches
+          </p>
+          <button
+            type="button"
+            onClick={() => setShowPhotoUpload(true)}
+            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-mss-turquoise to-teal-500 text-white py-3 px-4 rounded-lg font-medium hover:opacity-90 transition-opacity"
+          >
+            <Upload className="w-5 h-5" />
+            Upload Match Photos
+          </button>
+        </div>
       </div>
+
+      {/* Photo Upload Modal */}
+      {showPhotoUpload && (
+        <PhotoUpload onClose={() => setShowPhotoUpload(false)} />
+      )}
     </div>
   )
 }

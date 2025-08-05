@@ -1,21 +1,38 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import MatchList from '@/components/MatchList'
 import GroupStageView from '@/components/GroupStageView'
 import ScoreInput from '@/components/ScoreInput'
 import TournamentBracket from '@/components/TournamentBracket'
 import MobileNav from '@/components/MobileNav'
 import PullToRefresh from '@/components/PullToRefresh'
+import SocialHub from '@/components/SocialHub'
 import { useSwipeable } from 'react-swipeable'
 import Image from 'next/image'
+import { Match } from '@/types/tournament'
+import { getMatches } from '@/lib/tournament-api'
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'matches' | 'groups' | 'bracket' | 'input' | 'social'>('matches')
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [matches, setMatches] = useState<Match[]>([])
 
-  const tabs = ['matches', 'groups', 'bracket', 'input'] as const
+  const tabs = ['matches', 'groups', 'bracket', 'social', 'input'] as const
   const currentIndex = tabs.indexOf(activeTab as any)
+
+  useEffect(() => {
+    loadMatches()
+  }, [])
+
+  async function loadMatches() {
+    try {
+      const data = await getMatches()
+      setMatches(data)
+    } catch (error) {
+      console.error('Error loading matches:', error)
+    }
+  }
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
@@ -119,6 +136,16 @@ export default function Home() {
               Knockout Stage
             </button>
             <button
+              onClick={() => setActiveTab('social')}
+              className={`px-6 py-4 font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'social'
+                  ? 'text-mss-turquoise border-b-3 border-mss-turquoise bg-gradient-to-t from-mss-turquoise/10 to-transparent'
+                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+              }`}
+            >
+              Social Hub
+            </button>
+            <button
               onClick={() => setActiveTab('input')}
               className={`px-6 py-4 font-semibold transition-all whitespace-nowrap ${
                 activeTab === 'input'
@@ -139,12 +166,7 @@ export default function Home() {
             {activeTab === 'groups' && <GroupStageView />}
             {activeTab === 'bracket' && <TournamentBracket />}
             {activeTab === 'input' && <ScoreInput />}
-            {activeTab === 'social' && (
-              <div className="text-center py-16">
-                <h2 className="font-display text-3xl text-gray-700 dark:text-gray-300 mb-4">SOCIAL HUB</h2>
-                <p className="text-gray-500">Coming soon - Share moments and connect with fans!</p>
-              </div>
-            )}
+            {activeTab === 'social' && <SocialHub matches={matches} />}
           </div>
         </PullToRefresh>
       </div>

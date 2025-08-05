@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBL Coverage Test Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-4">CBL Coverage Update</h1>
+        
+        <form id="coverageForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Venue</label>
+                <select id="venue" class="w-full p-2 border rounded" required>
+                    <option value="">Select venue...</option>
+                    <option value="Yu Hwa">Yu Hwa</option>
+                    <option value="Malim">Malim</option>
+                    <option value="Kuala Nerang">Kuala Nerang</option>
+                    <option value="Gemencheh">Gemencheh</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-1">Content Type</label>
+                <select id="contentType" class="w-full p-2 border rounded" required>
+                    <option value="">Select type...</option>
+                    <option value="video">🎥 Video/Stream</option>
+                    <option value="photos">📸 Photos/Gallery</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-1">Your Name</label>
+                <input type="text" id="updatedBy" class="w-full p-2 border rounded" placeholder="John Doe" required>
+            </div>
+            
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+                Submit Update
+            </button>
+        </form>
+        
+        <div id="result" class="mt-4"></div>
+        
+        <hr class="my-6">
+        
+        <div>
+            <h2 class="text-lg font-semibold mb-2">Current Status</h2>
+            <div id="status" class="space-y-2 text-sm"></div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'https://cbl-coverage-api.zeidalqadri.workers.dev';
+        
+        // Load current status
+        async function loadStatus() {
+            try {
+                const response = await fetch(`${API_URL}/api/coverage`);
+                const data = await response.json();
+                
+                const statusDiv = document.getElementById('status');
+                statusDiv.innerHTML = Object.entries(data).map(([venue, info]) => `
+                    <div class="p-2 bg-gray-50 rounded">
+                        <strong>${venue}:</strong> ${info.status} 
+                        ${info.lastUpdated ? `(Updated ${new Date(info.lastUpdated).toLocaleTimeString()})` : ''}
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load status:', error);
+            }
+        }
+        
+        // Submit form
+        document.getElementById('coverageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                venue: document.getElementById('venue').value,
+                contentType: document.getElementById('contentType').value,
+                updatedBy: document.getElementById('updatedBy').value
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/api/coverage/update`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('result').innerHTML = `
+                        <div class="p-2 bg-green-100 text-green-700 rounded">
+                            ✅ Coverage updated successfully!
+                        </div>
+                    `;
+                    document.getElementById('coverageForm').reset();
+                    loadStatus();
+                } else {
+                    throw new Error('Update failed');
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <div class="p-2 bg-red-100 text-red-700 rounded">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+            }
+        });
+        
+        // Load status on page load
+        loadStatus();
+        setInterval(loadStatus, 30000); // Refresh every 30 seconds
+    </script>
+</body>
+</html>

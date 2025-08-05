@@ -1,0 +1,178 @@
+{
+  "name": "CBL Auto Match Status - Schedule Based",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8,10,12,14,16,18 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Match Times Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "notesInFlow": true,
+      "notes": "Runs at 8am, 10am, 12pm, 2pm, 4pm, 6pm"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Get current time and day\nconst now = new Date();\nconst currentHour = now.getHours();\nconst currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });\n\n// Match schedule for the tournament\n// Format: { time: hour, venue: 'venue name', matches: [array of match numbers] }\nconst schedule = {\n  'Monday': [\n    { time: 8, venue: 'SJKC YU HWA', matches: [1, 2, 3] },\n    { time: 10, venue: 'SJKC YU HWA', matches: [4, 5, 6] },\n    { time: 8, venue: 'SJKC MALIM', matches: [7, 8, 9] },\n    { time: 10, venue: 'SJKC MALIM', matches: [10, 11, 12] }\n  ],\n  'Tuesday': [\n    { time: 8, venue: 'SJKC YU HWA', matches: [13, 14, 15] },\n    { time: 10, venue: 'SJKC YU HWA', matches: [16, 17, 18] },\n    { time: 8, venue: 'SJKC MALIM', matches: [19, 20, 21] },\n    { time: 10, venue: 'SJKC MALIM', matches: [22, 23, 24] }\n  ]\n  // Add more days as needed\n};\n\n// YouTube live stream URLs by venue\nconst liveStreams = {\n  'SJKC YU HWA': 'https://youtube.com/live/YU_HWA_STREAM_ID',\n  'SJKC MALIM': null // No live stream, only photos\n};\n\n// Find matches for current time\nconst todaySchedule = schedule[currentDay] || [];\nconst currentMatches = [];\n\nfor (const slot of todaySchedule) {\n  if (slot.time === currentHour) {\n    for (const matchNumber of slot.matches) {\n      currentMatches.push({\n        json: {\n          venue: slot.venue,\n          matchNumber: matchNumber,\n          streamUrl: liveStreams[slot.venue],\n          action: 'update_status'\n        }\n      });\n    }\n  }\n}\n\n// If no matches at this time, return empty\nif (currentMatches.length === 0) {\n  return [{ json: { action: 'no_matches', time: currentHour, day: currentDay } }];\n}\n\nreturn currentMatches;"
+      },
+      "id": "get-current-matches",
+      "name": "Get Current Matches",
+      "type": "n8n-nodes-base.functionItem",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.action }}",
+              "operation": "notEqual",
+              "value2": "no_matches"
+            }
+          ]
+        }
+      },
+      "id": "check-matches",
+      "name": "Has Matches?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const venue = items[0].json.venue;\nconst matchNumber = items[0].json.matchNumber;\nconst streamUrl = items[0].json.streamUrl;\n\nconst payload = {\n  type: \"match_status\",\n  data: {\n    venue: venue,\n    matchNumber: matchNumber,\n    status: \"in_progress\"\n  }\n};\n\n// Only add live stream URL if it exists\nif (streamUrl) {\n  payload.data.liveStreamUrl = streamUrl;\n}\n\nconst payloadString = JSON.stringify(payload);\nconst encodedPayload = encodeURIComponent(payloadString);\n\nitems[0].json.encodedPayload = encodedPayload;\nitems[0].json.payloadDetails = payload;\n\nreturn items;"
+      },
+      "id": "build-update-payload",
+      "name": "Build Update Payload",
+      "type": "n8n-nodes-base.functionItem",
+      "typeVersion": 1,
+      "position": [850, 250]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://cbl-tourney.pages.dev/webhook-handler.html?payload={{ $json.encodedPayload }}",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "update-match",
+      "name": "Update Match Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 250]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "message",
+              "value": "No matches scheduled at this time"
+            },
+            {
+              "name": "checkedTime",
+              "value": "={{ $json.time }}:00"
+            },
+            {
+              "name": "checkedDay",
+              "value": "={{ $json.day }}"
+            }
+          ]
+        }
+      },
+      "id": "no-matches-log",
+      "name": "No Matches Log",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [850, 350]
+    }
+  ],
+  "connections": {
+    "Match Times Schedule": {
+      "main": [
+        [
+          {
+            "node": "Get Current Matches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Current Matches": {
+      "main": [
+        [
+          {
+            "node": "Has Matches?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Matches?": {
+      "main": [
+        [
+          {
+            "node": "Build Update Payload",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Matches Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Update Payload": {
+      "main": [
+        [
+          {
+            "node": "Update Match Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "1",
+      "name": "cbl-tournament"
+    },
+    {
+      "id": "4",
+      "name": "auto-schedule"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-08-04T14:00:00.000Z",
+  "versionId": "v1"
+}

@@ -1,0 +1,204 @@
+{
+  "name": "CBL Match Details - Database Driven",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Every 2 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n  match_number,\n  venue,\n  scheduled_time,\n  status,\n  live_stream_url\nFROM match_schedule\nWHERE DATE(scheduled_time) = CURRENT_DATE\n  AND scheduled_time <= NOW() + INTERVAL '2 minutes'\n  AND scheduled_time >= NOW() - INTERVAL '2 minutes'\n  AND (status IS NULL OR status != 'in_progress')",
+        "options": {}
+      },
+      "id": "query-database",
+      "name": "Query Upcoming Matches",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [450, 300],
+      "notesInFlow": true,
+      "notes": "Configure your database connection in N8N credentials"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $items.length }}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      },
+      "id": "check-matches",
+      "name": "Found Matches?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const matches = [];\n\nfor (const item of items) {\n  const venue = item.json.venue;\n  const matchNumber = item.json.match_number;\n  const streamUrl = item.json.live_stream_url;\n  \n  const payload = {\n    type: \"match_status\",\n    data: {\n      venue: venue,\n      matchNumber: matchNumber,\n      status: \"in_progress\"\n    }\n  };\n  \n  if (streamUrl) {\n    payload.data.liveStreamUrl = streamUrl;\n  }\n  \n  const payloadString = JSON.stringify(payload);\n  const encodedPayload = encodeURIComponent(payloadString);\n  \n  matches.push({\n    json: {\n      matchNumber: matchNumber,\n      venue: venue,\n      encodedPayload: encodedPayload,\n      payloadDetails: payload\n    }\n  });\n}\n\nreturn matches;"
+      },
+      "id": "prepare-updates",
+      "name": "Prepare Updates",
+      "type": "n8n-nodes-base.functionItem",
+      "typeVersion": 1,
+      "position": [850, 250]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://cbl-tourney.pages.dev/webhook-handler.html?payload={{ $json.encodedPayload }}",
+        "options": {
+          "timeout": 30000,
+          "batching": {
+            "batch": {
+              "batchSize": 5,
+              "batchInterval": 1000
+            }
+          }
+        }
+      },
+      "id": "update-matches",
+      "name": "Update Match Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 250]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE match_schedule SET status = 'in_progress', updated_at = NOW() WHERE match_number = {{ $json.matchNumber }} AND venue = '{{ $json.venue }}'",
+        "options": {}
+      },
+      "id": "update-database",
+      "name": "Update Database Status",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1250, 250]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "no_matches"
+            },
+            {
+              "name": "message",
+              "value": "No matches starting at this time"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      },
+      "id": "no-matches",
+      "name": "No Matches Log",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [850, 350]
+    }
+  ],
+  "connections": {
+    "Every 2 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Query Upcoming Matches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Upcoming Matches": {
+      "main": [
+        [
+          {
+            "node": "Found Matches?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Found Matches?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Updates",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Matches Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Updates": {
+      "main": [
+        [
+          {
+            "node": "Update Match Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Match Status": {
+      "main": [
+        [
+          {
+            "node": "Update Database Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "1",
+      "name": "cbl-tournament"
+    },
+    {
+      "id": "7",
+      "name": "database-driven"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-08-04T14:00:00.000Z",
+  "versionId": "v1"
+}
