@@ -8,17 +8,19 @@ import TournamentBracket from '@/components/TournamentBracket'
 import MobileNav from '@/components/MobileNav'
 import PullToRefresh from '@/components/PullToRefresh'
 import SocialHub from '@/components/SocialHub'
+import StreamView from '@/components/StreamView'
 import { useSwipeable } from 'react-swipeable'
 import Image from 'next/image'
 import { Match } from '@/types/tournament'
 import { getMatches } from '@/lib/tournament-api'
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'matches' | 'groups' | 'bracket' | 'input' | 'social'>('matches')
+  const [activeTab, setActiveTab] = useState<'matches' | 'stream' | 'groups' | 'bracket' | 'input' | 'social'>('matches')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [matches, setMatches] = useState<Match[]>([])
+  const [hasLiveStream, setHasLiveStream] = useState(false)
 
-  const tabs = ['matches', 'groups', 'bracket', 'social', 'input'] as const
+  const tabs = ['matches', 'stream', 'groups', 'bracket', 'social', 'input'] as const
   const currentIndex = tabs.indexOf(activeTab as any)
 
   useEffect(() => {
@@ -113,7 +115,25 @@ export default function Home() {
                   : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
               }`}
             >
-              Live Matches
+              All Matches
+            </button>
+            <button
+              onClick={() => setActiveTab('stream')}
+              className={`px-6 py-4 font-semibold transition-all whitespace-nowrap relative ${
+                activeTab === 'stream'
+                  ? 'text-mss-turquoise border-b-3 border-mss-turquoise bg-gradient-to-t from-mss-turquoise/10 to-transparent'
+                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                Stream
+                {hasLiveStream && (
+                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                  </span>
+                )}
+              </span>
             </button>
             <button
               onClick={() => setActiveTab('groups')}
@@ -163,6 +183,7 @@ export default function Home() {
         <PullToRefresh onRefresh={handleRefresh}>
           <div className="max-w-7xl mx-auto" {...handlers}>
             {activeTab === 'matches' && <MatchList />}
+            {activeTab === 'stream' && <StreamView onLiveStatusChange={setHasLiveStream} />}
             {activeTab === 'groups' && <GroupStageView />}
             {activeTab === 'bracket' && <TournamentBracket />}
             {activeTab === 'input' && <ScoreInput />}
@@ -172,7 +193,7 @@ export default function Home() {
       </div>
 
       {/* Mobile Navigation */}
-      <MobileNav activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab as any)} />
+      <MobileNav activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab as any)} hasLiveStream={hasLiveStream} />
     </main>
   )
 }
