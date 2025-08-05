@@ -71,11 +71,10 @@ export default function PhotoUpload({ onClose, matchId, venue: initialVenue }: P
     try {
       // Find the match ID
       const { data: matches, error: matchError } = await supabase
-        .from('matches')
+        .from('tournament_matches')
         .select('id')
         .eq('venue', venue)
         .eq('match_number', parseInt(matchNumber))
-        .eq('division', division)
         .single()
       
       if (matchError || !matches) {

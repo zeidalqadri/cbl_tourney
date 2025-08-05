@@ -79,10 +79,9 @@ export async function POST(request: NextRequest) {
 
       uploadedPhotos.push({
         url: publicUrl,
-        thumbnailUrl: publicUrl, // In production, generate a thumbnail
+        thumbnail: publicUrl, // In production, generate a thumbnail
         caption: captions[i] || '',
-        photographer: photographerName,
-        uploadedAt: new Date().toISOString()
+        photographer: photographerName
       });
     }
 

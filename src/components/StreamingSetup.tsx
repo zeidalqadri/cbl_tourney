@@ -25,16 +25,16 @@ export function StreamingSetup({ onlyUpcoming = true }: StreamingSetupProps) {
   const fetchMatches = async () => {
     try {
       let query = supabase
-        .from('matches')
+        .from('tournament_matches')
         .select(`
           *,
-          teamA:teams!matches_team_a_id_fkey(id, name:team_name),
-          teamB:teams!matches_team_b_id_fkey(id, name:team_name)
+          team1:tournament_teams!tournament_matches_team1_id_fkey(id, team_name, division),
+          team2:tournament_teams!tournament_matches_team2_id_fkey(id, team_name, division)
         `)
         .order('match_number', { ascending: true });
 
       if (onlyUpcoming) {
-        query = query.or('status.eq.scheduled,status.eq.in_progress');
+        query = query.or('status.eq.pending,status.eq.in_progress');
       }
 
       const { data, error } = await query;
@@ -43,10 +43,37 @@ export function StreamingSetup({ onlyUpcoming = true }: StreamingSetupProps) {
       
       // Transform the data to match our interface
       const transformedData = (data || []).map(match => ({
-        ...match,
+        id: match.id,
         matchNumber: match.match_number,
-        teamA: match.teamA?.[0] || { id: match.team_a_id, name: 'TBA' },
-        teamB: match.teamB?.[0] || { id: match.team_b_id, name: 'TBA' }
+        date: match.scheduled_time ? new Date(match.scheduled_time).toISOString().split('T')[0] : '',
+        time: match.scheduled_time ? new Date(match.scheduled_time).toTimeString().split(' ')[0].slice(0, 5) : '',
+        venue: match.venue || match.court || 'TBD',
+        division: match.team1?.[0]?.division || match.team2?.[0]?.division || match.metadata?.division || 'boys',
+        round: `Round ${match.round}`,
+        teamA: match.team1?.[0] ? { 
+          id: match.team1[0].id, 
+          name: match.team1[0].team_name,
+          group: '',
+          division: match.team1[0].division
+        } : { 
+          id: '', 
+          name: match.metadata?.team1_placeholder || 'TBD',
+          group: '',
+          division: match.metadata?.division || 'boys'
+        },
+        teamB: match.team2?.[0] ? { 
+          id: match.team2[0].id, 
+          name: match.team2[0].team_name,
+          group: '',
+          division: match.team2[0].division
+        } : { 
+          id: '', 
+          name: match.metadata?.team2_placeholder || 'TBD',
+          group: '',
+          division: match.metadata?.division || 'boys'
+        },
+        status: match.status === 'pending' ? 'scheduled' : match.status,
+        metadata: match.metadata
       }));
       
       setMatches(transformedData);
@@ -294,23 +321,49 @@ export function StreamingQuickSetup() {
 
   const fetchUpcomingMatches = async () => {
     const { data } = await supabase
-      .from('matches')
+      .from('tournament_matches')
       .select(`
         *,
-        teamA:teams!matches_team_a_id_fkey(id, name:team_name),
-        teamB:teams!matches_team_b_id_fkey(id, name:team_name)
+        team1:tournament_teams!tournament_matches_team1_id_fkey(id, team_name, division),
+        team2:tournament_teams!tournament_matches_team2_id_fkey(id, team_name, division)
       `)
-      .or('status.eq.scheduled,status.eq.in_progress')
-      .order('date', { ascending: true })
-      .order('time', { ascending: true })
+      .or('status.eq.pending,status.eq.in_progress')
+      .order('scheduled_time', { ascending: true })
       .limit(5);
     
     // Transform the data to match our interface
     const transformedData = (data || []).map(match => ({
-      ...match,
+      id: match.id,
       matchNumber: match.match_number,
-      teamA: match.teamA?.[0] || { id: match.team_a_id, name: 'TBA' },
-      teamB: match.teamB?.[0] || { id: match.team_b_id, name: 'TBA' }
+      date: match.scheduled_time ? new Date(match.scheduled_time).toISOString().split('T')[0] : '',
+      time: match.scheduled_time ? new Date(match.scheduled_time).toTimeString().split(' ')[0].slice(0, 5) : '',
+      venue: match.venue || match.court || 'TBD',
+      division: match.team1?.[0]?.division || match.team2?.[0]?.division || match.metadata?.division || 'boys',
+      round: `Round ${match.round}`,
+      teamA: match.team1?.[0] ? { 
+        id: match.team1[0].id, 
+        name: match.team1[0].team_name,
+        group: '',
+        division: match.team1[0].division
+      } : { 
+        id: '', 
+        name: match.metadata?.team1_placeholder || 'TBD',
+        group: '',
+        division: match.metadata?.division || 'boys'
+      },
+      teamB: match.team2?.[0] ? { 
+        id: match.team2[0].id, 
+        name: match.team2[0].team_name,
+        group: '',
+        division: match.team2[0].division
+      } : { 
+        id: '', 
+        name: match.metadata?.team2_placeholder || 'TBD',
+        group: '',
+        division: match.metadata?.division || 'boys'
+      },
+      status: match.status === 'pending' ? 'scheduled' : match.status,
+      metadata: match.metadata
     }));
     
     setMatches(transformedData);
