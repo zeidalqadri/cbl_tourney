@@ -40,8 +40,8 @@ export default function ScoreInput() {
           (isToday && match.status === 'scheduled') ||
           // Today's in-progress 0-0 matches
           (isToday && match.status === 'in_progress' && isUnscored) ||
-          // Past matches that are still 0-0 (missed scoring)
-          (isPast && isUnscored)
+          // Past matches that are still 0-0 (ANY status - scheduled, in_progress, or completed)
+          (isPast && isUnscored && (match.status === 'scheduled' || match.status === 'in_progress' || match.status === 'completed'))
         )
       })
       
