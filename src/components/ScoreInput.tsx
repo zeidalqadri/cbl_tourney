@@ -23,11 +23,17 @@ export default function ScoreInput() {
   async function loadTodayMatches() {
     try {
       const today = new Date().toISOString().split('T')[0]
-      const data = await getMatches({
-        date: today,
-        status: 'scheduled'
+      const allData = await getMatches({
+        date: today
       })
-      setMatches(data)
+      
+      // Filter to show scheduled matches and in-progress matches that are still 0-0
+      const eligibleMatches = allData.filter(match => 
+        match.status === 'scheduled' || 
+        (match.status === 'in_progress' && match.scoreA === 0 && match.scoreB === 0)
+      )
+      
+      setMatches(eligibleMatches)
     } catch (error) {
       console.error('Error loading matches:', error)
     } finally {
@@ -86,15 +92,16 @@ export default function ScoreInput() {
             >
               <option value="">Choose a match...</option>
               {matches.length > 0 ? (
-                <optgroup label="Today's Matches">
+                <optgroup label="Today's Matches (Scheduled & 0-0)">
                   {matches.map(match => (
                     <option key={match.id} value={match.id}>
                       Match #{match.matchNumber}: {match.teamA.name} vs {match.teamB.name}
+                      {match.status === 'in_progress' ? ' (0-0)' : ''}
                     </option>
                   ))}
                 </optgroup>
               ) : (
-                <option disabled>No matches scheduled for today</option>
+                <option disabled>No matches available for scoring</option>
               )}
             </select>
           </div>
