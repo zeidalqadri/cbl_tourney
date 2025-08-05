@@ -49,7 +49,7 @@ export default function StreamView({ onLiveStatusChange }: StreamViewProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8">
       {/* Header */}
       <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6">
         <div className="flex items-center gap-3 mb-4">

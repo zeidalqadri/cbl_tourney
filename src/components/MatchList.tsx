@@ -79,7 +79,7 @@ export default function MatchList() {
   const currentDayMatches = allMatches.filter(m => m.date === selectedDate)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8">
       {/* Date Selection */}
       <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4">
         <div className="flex items-center gap-2 mb-4">

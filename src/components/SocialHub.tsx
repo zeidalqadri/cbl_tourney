@@ -137,7 +137,7 @@ export default function SocialHub({ matches = [] }: SocialHubProps) {
   ]
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-8">
       {/* Header */}
       <div className="text-center">
         <div className="flex items-center justify-center gap-4 mb-4">
