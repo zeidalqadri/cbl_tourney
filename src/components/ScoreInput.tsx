@@ -23,15 +23,35 @@ export default function ScoreInput() {
   async function loadTodayMatches() {
     try {
       const today = new Date().toISOString().split('T')[0]
-      const allData = await getMatches({
-        date: today
+      // Get ALL matches to find past unscored ones
+      const allData = await getMatches()
+      
+      // Filter to show:
+      // 1. Today's scheduled matches
+      // 2. Today's in-progress matches that are still 0-0
+      // 3. Past matches (before today) that are still 0-0 (indicating scores not keyed in)
+      const eligibleMatches = allData.filter(match => {
+        const isToday = match.date === today
+        const isPast = match.date < today
+        const isUnscored = match.scoreA === 0 && match.scoreB === 0
+        
+        return (
+          // Today's scheduled matches
+          (isToday && match.status === 'scheduled') ||
+          // Today's in-progress 0-0 matches
+          (isToday && match.status === 'in_progress' && isUnscored) ||
+          // Past matches that are still 0-0 (missed scoring)
+          (isPast && isUnscored)
+        )
       })
       
-      // Filter to show scheduled matches and in-progress matches that are still 0-0
-      const eligibleMatches = allData.filter(match => 
-        match.status === 'scheduled' || 
-        (match.status === 'in_progress' && match.scoreA === 0 && match.scoreB === 0)
-      )
+      // Sort by date (oldest first) then by match number
+      eligibleMatches.sort((a, b) => {
+        if (a.date !== b.date) {
+          return a.date.localeCompare(b.date)
+        }
+        return a.matchNumber - b.matchNumber
+      })
       
       setMatches(eligibleMatches)
     } catch (error) {
@@ -92,14 +112,36 @@ export default function ScoreInput() {
             >
               <option value="">Choose a match...</option>
               {matches.length > 0 ? (
-                <optgroup label="Today's Matches (Scheduled & 0-0)">
-                  {matches.map(match => (
-                    <option key={match.id} value={match.id}>
-                      Match #{match.matchNumber}: {match.teamA.name} vs {match.teamB.name}
-                      {match.status === 'in_progress' ? ' (0-0)' : ''}
-                    </option>
-                  ))}
-                </optgroup>
+                (() => {
+                  const today = new Date().toISOString().split('T')[0]
+                  const todayMatches = matches.filter(m => m.date === today)
+                  const pastMatches = matches.filter(m => m.date < today)
+                  
+                  return (
+                    <>
+                      {todayMatches.length > 0 && (
+                        <optgroup label="Today's Matches">
+                          {todayMatches.map(match => (
+                            <option key={match.id} value={match.id}>
+                              Match #{match.matchNumber}: {match.teamA.name} vs {match.teamB.name}
+                              {match.status === 'in_progress' ? ' (In Progress 0-0)' : ''}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                      {pastMatches.length > 0 && (
+                        <optgroup label="Past Unscored Matches (0-0)">
+                          {pastMatches.map(match => (
+                            <option key={match.id} value={match.id}>
+                              {new Date(match.date).toLocaleDateString('en-MY', { month: 'short', day: 'numeric' })} - 
+                              Match #{match.matchNumber}: {match.teamA.name} vs {match.teamB.name}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                    </>
+                  )
+                })()
               ) : (
                 <option disabled>No matches available for scoring</option>
               )}
