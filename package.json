@@ -9,16 +9,20 @@
     "lint": "next lint",
     "pages:build": "npx @cloudflare/next-on-pages@1",
     "pages:deploy": "npx wrangler pages deploy .vercel/output/static",
-    "pages:dev": "npx wrangler pages dev .vercel/output/static --compatibility-date=2024-01-01 --compatibility-flags=nodejs_compat"
+    "pages:dev": "npx wrangler pages dev .vercel/output/static --compatibility-date=2024-01-01 --compatibility-flags=nodejs_compat",
+    "sync-tournament": "node sync-tournament-data.js",
+    "validate-tournament": "node validate-tournament-data.js",
+    "check-db": "node check-database.js"
   },
   "dependencies": {
-    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.53.0",
     "@types/html2canvas": "^0.5.35",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.20",
+    "dotenv": "^17.2.1",
     "framer-motion": "^12.23.12",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.478.0",

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { GroupStanding } from '@/types/tournament'
 import { getEnhancedGroupStandings, subscribeToMatches, subscribeToQualificationUpdates } from '@/lib/tournament-api'
-import { Trophy, CheckCircle, AlertCircle, XCircle } from 'lucide-react'
+import { Trophy, CheckCircle, AlertCircle, XCircle, Target, TrendingUp } from 'lucide-react'
 
 interface GroupStandingsProps {
   groupName: string
@@ -99,18 +99,18 @@ export default function GroupStandings({ groupName, division }: GroupStandingsPr
       
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead>
-            <tr className="text-left text-xs text-gray-500 border-b">
-              <th className="pb-2">Pos</th>
-              <th className="pb-2">Team</th>
-              <th className="pb-2 text-center">P</th>
-              <th className="pb-2 text-center">W</th>
-              <th className="pb-2 text-center">L</th>
-              <th className="pb-2 text-center">PF</th>
-              <th className="pb-2 text-center">PA</th>
-              <th className="pb-2 text-center">+/-</th>
-              <th className="pb-2 text-center">Pts</th>
-              <th className="pb-2">Status</th>
+          <thead className="bg-gray-50">
+            <tr className="text-left text-xs uppercase text-gray-600 border-b">
+              <th className="p-2">Pos</th>
+              <th className="p-2">Team</th>
+              <th className="p-2 text-center">P</th>
+              <th className="p-2 text-center">W</th>
+              <th className="p-2 text-center">L</th>
+              <th className="p-2 text-center">PF</th>
+              <th className="p-2 text-center">PA</th>
+              <th className="p-2 text-center">+/-</th>
+              <th className="p-2 text-center font-semibold">Pts</th>
+              <th className="p-2">Status</th>
             </tr>
           </thead>
           <tbody>
