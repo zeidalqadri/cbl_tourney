@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Match } from '@/types/tournament'
 import { getMatches, updateMatchScore } from '@/lib/tournament-api'
-import { Camera, Upload, Video } from 'lucide-react'
+import { Camera, Upload } from 'lucide-react'
 import PhotoUpload from './PhotoUpload'
 import Link from 'next/link'
 
@@ -221,23 +221,6 @@ export default function ScoreInput() {
           </button>
         </div>
 
-        {/* Streaming Setup Section */}
-        <div className="mt-6 bg-white rounded-lg shadow-sm p-6">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Video className="w-5 h-5" />
-            Streaming Tools
-          </h3>
-          <p className="text-sm text-gray-600 mb-4">
-            Generate YouTube titles and descriptions for live streams
-          </p>
-          <Link
-            href="/streaming"
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white py-3 px-4 rounded-lg font-medium hover:opacity-90 transition-opacity"
-          >
-            <Video className="w-5 h-5" />
-            Streaming Setup
-          </Link>
-        </div>
       </div>
 
       {/* Photo Upload Modal */}

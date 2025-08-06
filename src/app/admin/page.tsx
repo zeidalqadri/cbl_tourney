@@ -1,4 +1,6 @@
 import ScoreInput from '@/components/ScoreInput'
+import Link from 'next/link'
+import { Settings, Calendar, Camera } from 'lucide-react'
 
 export default function AdminPage() {
   return (
@@ -7,6 +9,43 @@ export default function AdminPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
           Tournament Admin
         </h1>
+        
+        {/* Admin Navigation */}
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Link
+            href="/admin/matches"
+            className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <Calendar className="w-6 h-6 text-cbl-orange" />
+              <h2 className="text-lg font-semibold">Match Management</h2>
+            </div>
+            <p className="text-sm text-gray-600">
+              Manage schedules, venues, delays, and officials
+            </p>
+          </Link>
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm opacity-75">
+            <div className="flex items-center gap-3 mb-2">
+              <Camera className="w-6 h-6 text-gray-400" />
+              <h2 className="text-lg font-semibold text-gray-600">Photo Management</h2>
+            </div>
+            <p className="text-sm text-gray-500">
+              Coming soon: Google Drive integration
+            </p>
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm opacity-75">
+            <div className="flex items-center gap-3 mb-2">
+              <Settings className="w-6 h-6 text-gray-400" />
+              <h2 className="text-lg font-semibold text-gray-600">Settings</h2>
+            </div>
+            <p className="text-sm text-gray-500">
+              Tournament configuration
+            </p>
+          </div>
+        </div>
+        
         <ScoreInput />
       </div>
     </div>
