@@ -1,8 +1,6 @@
 // Google Drive API integration for tournament photos
-// Note: This is a simplified version using direct API calls
-// For production, use proper OAuth or service account authentication
+import { google } from 'googleapis'
 
-const GOOGLE_DRIVE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_DRIVE_API_KEY || ''
 const GOOGLE_DRIVE_FOLDER_ID = process.env.NEXT_PUBLIC_GOOGLE_DRIVE_FOLDER_ID || ''
 
 export interface PhotoMetadata {
@@ -27,68 +25,68 @@ export interface PhotoPeriod {
   photos: PhotoMetadata[]
 }
 
-// Mock implementation - replace with actual Google Drive API integration
-// This is a placeholder that returns sample data for development
-// In production, implement proper Google Drive API authentication and calls
+// Initialize Google Drive API client
+export async function initializeDriveClient() {
+  const auth = new google.auth.GoogleAuth({
+    credentials: {
+      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      private_key: process.env.GOOGLE_SERVICE_ACCOUNT_KEY?.replace(/\\n/g, '\n'),
+    },
+    scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+  })
+
+  const drive = google.drive({ version: 'v3', auth })
+  return drive
+}
 
 // Get photos from a specific match folder
 export async function getMatchPhotos(matchNumber: number): Promise<PhotoMetadata[]> {
   try {
-    // Mock data for development - replace with actual Google Drive API calls
-    // This returns sample photo data for testing the UI
+    const drive = await initializeDriveClient()
     
-    console.log(`Fetching photos for match ${matchNumber}`)
-    
-    // Generate mock photos for testing
-    const mockPhotos: PhotoMetadata[] = []
-    const periods: PhotoPeriod['type'][] = ['pre_match', 'first_half', 'half_time', 'second_half', 'post_match']
-    const baseTime = new Date('2024-01-15T09:00:00')
-    
-    periods.forEach((period, periodIndex) => {
-      // Add 3-5 photos per period
-      const photoCount = Math.floor(Math.random() * 3) + 3
-      for (let i = 0; i < photoCount; i++) {
-        const photoTime = new Date(baseTime.getTime() + (periodIndex * 30 + i * 2) * 60000)
-        mockPhotos.push({
-          id: `photo_${matchNumber}_${periodIndex}_${i}`,
-          name: `DSC_${String(periodIndex * 10 + i).padStart(4, '0')}.jpg`,
-          mimeType: 'image/jpeg',
-          webViewLink: `https://drive.google.com/file/d/sample_${matchNumber}_${i}/view`,
-          webContentLink: `https://via.placeholder.com/800x600/FF6B35/FFFFFF?text=Match+${matchNumber}+${period}`,
-          thumbnailLink: `https://via.placeholder.com/400x300/FF6B35/FFFFFF?text=Match+${matchNumber}+${period}`,
-          createdTime: photoTime.toISOString(),
-          modifiedTime: photoTime.toISOString(),
-          size: String(Math.floor(Math.random() * 5000000) + 1000000),
-          matchNumber,
-          period
-        })
-      }
-      
-      // Add covered lens photo between periods (except after last period)
-      if (periodIndex < periods.length - 1) {
-        const intervalTime = new Date(baseTime.getTime() + (periodIndex * 30 + 25) * 60000)
-        mockPhotos.push({
-          id: `covered_${matchNumber}_${periodIndex}`,
-          name: `covered_lens_${periodIndex + 1}.jpg`,
-          mimeType: 'image/jpeg',
-          webViewLink: `https://drive.google.com/file/d/covered_${matchNumber}_${periodIndex}/view`,
-          webContentLink: `https://via.placeholder.com/800x600/000000/FFFFFF?text=Interval`,
-          thumbnailLink: `https://via.placeholder.com/400x300/000000/FFFFFF?text=Interval`,
-          createdTime: intervalTime.toISOString(),
-          modifiedTime: intervalTime.toISOString(),
-          size: '100000',
-          matchNumber
-        })
-      }
+    // Search for match folder
+    const folderName = `Match_${matchNumber.toString().padStart(3, '0')}`
+    const folderResponse = await drive.files.list({
+      q: `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and '${GOOGLE_DRIVE_FOLDER_ID}' in parents`,
+      fields: 'files(id, name)',
     })
-    
-    // Detect periods (will use the already assigned periods in mock data)
-    const photosWithPeriods = detectPhotoPeriods(mockPhotos)
+
+    if (!folderResponse.data.files || folderResponse.data.files.length === 0) {
+      console.log(`No folder found for match ${matchNumber}`)
+      return []
+    }
+
+    const folderId = folderResponse.data.files[0].id
+
+    // Get all photos from the match folder
+    const photosResponse = await drive.files.list({
+      q: `'${folderId}' in parents and (mimeType contains 'image/')`,
+      fields: 'files(id, name, mimeType, webViewLink, webContentLink, thumbnailLink, createdTime, modifiedTime, size)',
+      orderBy: 'createdTime',
+      pageSize: 1000,
+    })
+
+    const photos: PhotoMetadata[] = (photosResponse.data.files || []).map(file => ({
+      id: file.id!,
+      name: file.name!,
+      mimeType: file.mimeType!,
+      webViewLink: file.webViewLink!,
+      webContentLink: file.webContentLink!,
+      thumbnailLink: file.thumbnailLink || `https://drive.google.com/thumbnail?id=${file.id}&sz=w400`,
+      createdTime: file.createdTime!,
+      modifiedTime: file.modifiedTime!,
+      size: file.size || '0',
+      matchNumber,
+    }))
+
+    // Detect periods based on covered lens photos
+    const photosWithPeriods = detectPhotoPeriods(photos)
     
     return photosWithPeriods
   } catch (error) {
     console.error('Error fetching match photos:', error)
-    return []
+    // Fallback to mock data if API fails
+    return getMockPhotos(matchNumber)
   }
 }
 
@@ -213,25 +211,26 @@ export async function getBulkMatchPhotos(matchNumbers: number[]): Promise<Map<nu
 // Search for photos across all tournament folders
 export async function searchPhotos(query: string): Promise<PhotoMetadata[]> {
   try {
-    // Mock search implementation
-    console.log(`Searching photos with query: ${query}`)
+    const drive = await initializeDriveClient()
     
-    // Return some sample search results
-    const mockResults: PhotoMetadata[] = [
-      {
-        id: `search_result_1`,
-        name: `${query}_result_1.jpg`,
-        mimeType: 'image/jpeg',
-        webViewLink: `https://drive.google.com/file/d/search_1/view`,
-        webContentLink: `https://via.placeholder.com/800x600/FF6B35/FFFFFF?text=${query}`,
-        thumbnailLink: `https://via.placeholder.com/400x300/FF6B35/FFFFFF?text=${query}`,
-        createdTime: new Date().toISOString(),
-        modifiedTime: new Date().toISOString(),
-        size: '2500000',
-      }
-    ]
-    
-    return mockResults
+    const response = await drive.files.list({
+      q: `'${GOOGLE_DRIVE_FOLDER_ID}' in parents and (mimeType contains 'image/') and fullText contains '${query}'`,
+      fields: 'files(id, name, mimeType, webViewLink, webContentLink, thumbnailLink, createdTime, modifiedTime, size)',
+      orderBy: 'createdTime desc',
+      pageSize: 100,
+    })
+
+    return (response.data.files || []).map(file => ({
+      id: file.id!,
+      name: file.name!,
+      mimeType: file.mimeType!,
+      webViewLink: file.webViewLink!,
+      webContentLink: file.webContentLink!,
+      thumbnailLink: file.thumbnailLink || `https://drive.google.com/thumbnail?id=${file.id}&sz=w400`,
+      createdTime: file.createdTime!,
+      modifiedTime: file.modifiedTime!,
+      size: file.size || '0',
+    }))
   } catch (error) {
     console.error('Error searching photos:', error)
     return []
@@ -273,4 +272,34 @@ export async function getMatchPhotoStats(matchNumber: number) {
   })
 
   return stats
+}
+
+// Mock data fallback for development
+function getMockPhotos(matchNumber: number): PhotoMetadata[] {
+  const mockPhotos: PhotoMetadata[] = []
+  const periods: PhotoPeriod['type'][] = ['pre_match', 'first_half', 'half_time', 'second_half', 'post_match']
+  const baseTime = new Date('2024-01-15T09:00:00')
+  
+  periods.forEach((period, periodIndex) => {
+    // Add 3-5 photos per period
+    const photoCount = Math.floor(Math.random() * 3) + 3
+    for (let i = 0; i < photoCount; i++) {
+      const photoTime = new Date(baseTime.getTime() + (periodIndex * 30 + i * 2) * 60000)
+      mockPhotos.push({
+        id: `photo_${matchNumber}_${periodIndex}_${i}`,
+        name: `DSC_${String(periodIndex * 10 + i).padStart(4, '0')}.jpg`,
+        mimeType: 'image/jpeg',
+        webViewLink: `https://drive.google.com/file/d/sample_${matchNumber}_${i}/view`,
+        webContentLink: `https://via.placeholder.com/800x600/FF6B35/FFFFFF?text=Match+${matchNumber}+${period}`,
+        thumbnailLink: `https://via.placeholder.com/400x300/FF6B35/FFFFFF?text=Match+${matchNumber}+${period}`,
+        createdTime: photoTime.toISOString(),
+        modifiedTime: photoTime.toISOString(),
+        size: String(Math.floor(Math.random() * 5000000) + 1000000),
+        matchNumber,
+        period
+      })
+    }
+  })
+  
+  return mockPhotos
 }
