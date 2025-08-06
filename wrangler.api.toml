@@ -3,11 +3,9 @@ name = "cbl-tourney-api"
 main = "workers/api.ts"
 compatibility_date = "2025-01-01"
 
-# Worker route - handles all /api/* requests
-routes = [
-  { pattern = "cbl-tourney.pages.dev/api/*", custom_domain = true },
-  { pattern = "cbl-basketball-tracker.pages.dev/api/*", custom_domain = true }
-]
+# Worker will be deployed as a standalone service
+# Access via: https://cbl-tourney-api.{your-subdomain}.workers.dev/
+# Pages will proxy /api/* requests to this Worker
 
 # Enable Node.js compatibility if needed
 compatibility_flags = ["nodejs_compat"]
