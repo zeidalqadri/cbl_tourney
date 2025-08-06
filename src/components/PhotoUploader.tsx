@@ -59,6 +59,7 @@ export default function PhotoUploader({ match, onClose, onSelectPhotos }: PhotoU
           first_half: matchPhotos.filter(p => p.period === 'first_half').length,
           half_time: matchPhotos.filter(p => p.period === 'half_time').length,
           second_half: matchPhotos.filter(p => p.period === 'second_half').length,
+          full_time: matchPhotos.filter(p => p.period === 'full_time').length,
           post_match: matchPhotos.filter(p => p.period === 'post_match').length,
         }
       }
