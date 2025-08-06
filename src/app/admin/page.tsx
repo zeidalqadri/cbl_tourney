@@ -25,15 +25,18 @@ export default function AdminPage() {
             </p>
           </Link>
           
-          <div className="bg-white p-6 rounded-lg shadow-sm opacity-75">
+          <Link
+            href="/admin/photos"
+            className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+          >
             <div className="flex items-center gap-3 mb-2">
-              <Camera className="w-6 h-6 text-gray-400" />
-              <h2 className="text-lg font-semibold text-gray-600">Photo Management</h2>
+              <Camera className="w-6 h-6 text-cbl-orange" />
+              <h2 className="text-lg font-semibold">Photo Management</h2>
             </div>
-            <p className="text-sm text-gray-500">
-              Coming soon: Google Drive integration
+            <p className="text-sm text-gray-600">
+              Google Drive integration with smart period detection
             </p>
-          </div>
+          </Link>
           
           <div className="bg-white p-6 rounded-lg shadow-sm opacity-75">
             <div className="flex items-center gap-3 mb-2">

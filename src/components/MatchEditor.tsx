@@ -52,7 +52,7 @@ export default function MatchEditor({ match, onClose, onSave }: MatchEditorProps
   }
   
   function handleFieldChange(field: string, value: any) {
-    setEditedMatch(prev => ({
+    setEditedMatch((prev: any) => ({
       ...prev,
       [field]: value
     }))
@@ -129,7 +129,7 @@ export default function MatchEditor({ match, onClose, onSave }: MatchEditorProps
     const scheduled = new Date(editedMatch.scheduled_time)
     const newTime = new Date(scheduled.getTime() + minutes * 60000)
     
-    setEditedMatch(prev => ({
+    setEditedMatch((prev: any) => ({
       ...prev,
       scheduled_time: newTime.toISOString(),
       delay_minutes: (prev.delay_minutes || 0) + minutes,

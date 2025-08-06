@@ -15,6 +15,7 @@
     "check-db": "node check-database.js"
   },
   "dependencies": {
+    "@nodelib/fs.walk": "^3.0.1",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.53.0",
     "@types/html2canvas": "^0.5.35",
@@ -24,8 +25,10 @@
     "autoprefixer": "^10.4.20",
     "dotenv": "^17.2.1",
     "framer-motion": "^12.23.12",
+    "googleapis": "^155.0.0",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.478.0",
+    "motion-utils": "^12.23.6",
     "next": "14.2.31",
     "postcss": "^8",
     "react": "^18",
