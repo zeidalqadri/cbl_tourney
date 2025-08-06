@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "pages:build": "next build",
     "build:cloudflare": "next build && npm run build:worker",
     "build:worker": "wrangler deploy --dry-run --outdir dist --config wrangler.api.toml",
     "deploy:pages": "wrangler pages deploy out",
