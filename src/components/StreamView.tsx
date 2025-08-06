@@ -109,7 +109,7 @@ export default function StreamView({ onLiveStatusChange, selectedMatchNumber, se
         `${selectedMatchDetails?.teamA} ${selectedMatchDetails?.teamB}`, // Both team names
         selectedMatchDetails?.teamA, // Just Team A
         selectedMatchDetails?.teamB  // Just Team B
-      ].filter(Boolean)
+      ].filter((q): q is string => typeof q === 'string' && q.length > 0)
       
       for (const query of searchQueries) {
         const searchResponse = await fetch(
