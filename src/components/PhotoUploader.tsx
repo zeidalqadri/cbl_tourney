@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Match } from '@/types/tournament'
-import { getMatchPhotos, PhotoMetadata, PhotoPeriod } from '@/lib/google-drive'
+import { getMatchPhotos, PhotoMetadata, PhotoPeriod } from '@/lib/google-drive-client'
 import { 
   Camera, 
   Upload, 
