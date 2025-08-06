@@ -19,12 +19,38 @@ export default function Home() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [matches, setMatches] = useState<Match[]>([])
   const [hasLiveStream, setHasLiveStream] = useState(false)
+  const [selectedMatchNumber, setSelectedMatchNumber] = useState<number | null>(null)
+  const [selectedMatchDetails, setSelectedMatchDetails] = useState<{
+    teamA?: string
+    teamB?: string
+    venue?: string
+  }>({})
 
   const tabs = ['matches', 'stream', 'groups', 'bracket', 'social', 'input'] as const
   const currentIndex = tabs.indexOf(activeTab as any)
 
   useEffect(() => {
     loadMatches()
+    
+    // Check URL parameters on load
+    const urlParams = new URLSearchParams(window.location.search)
+    const tabParam = urlParams.get('tab')
+    const matchParam = urlParams.get('match')
+    const teamA = urlParams.get('teamA')
+    const teamB = urlParams.get('teamB')
+    const venue = urlParams.get('venue')
+    
+    if (tabParam === 'stream') {
+      setActiveTab('stream')
+      if (matchParam) {
+        setSelectedMatchNumber(parseInt(matchParam))
+        setSelectedMatchDetails({
+          teamA: teamA || undefined,
+          teamB: teamB || undefined,
+          venue: venue || undefined
+        })
+      }
+    }
   }, [])
 
   async function loadMatches() {
@@ -183,7 +209,7 @@ export default function Home() {
         <PullToRefresh onRefresh={handleRefresh}>
           <div className="max-w-7xl mx-auto" {...handlers}>
             {activeTab === 'matches' && <MatchList />}
-            {activeTab === 'stream' && <StreamView onLiveStatusChange={setHasLiveStream} />}
+            {activeTab === 'stream' && <StreamView onLiveStatusChange={setHasLiveStream} selectedMatchNumber={selectedMatchNumber} selectedMatchDetails={selectedMatchDetails} />}
             {activeTab === 'groups' && <GroupStageView />}
             {activeTab === 'bracket' && <TournamentBracket />}
             {activeTab === 'input' && <ScoreInput />}
