@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Match, TournamentBracket as BracketType } from '@/types/tournament'
 import { getTournamentBracket, subscribeToMatches } from '@/lib/tournament-api'
-import { Trophy, Users, ChevronRight } from 'lucide-react'
+import { Trophy, Users, ChevronRight, CheckCircle } from 'lucide-react'
 
 interface BracketMatchProps {
   match: Match
@@ -13,6 +13,16 @@ interface BracketMatchProps {
 function BracketMatch({ match, roundName }: BracketMatchProps) {
   const isCompleted = match.status === 'completed'
   const hasTeams = match.teamA.id && match.teamB.id
+  
+  // Determine winner
+  const getWinner = () => {
+    if (!isCompleted || match.scoreA === undefined || match.scoreB === undefined) return null
+    if (match.scoreA > match.scoreB) return 'A'
+    if (match.scoreB > match.scoreA) return 'B'
+    return null
+  }
+  
+  const winner = getWinner()
   
   return (
     <div className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
@@ -31,28 +41,54 @@ function BracketMatch({ match, roundName }: BracketMatchProps) {
       </div>
       
       <div className="space-y-2">
-        <div className={`flex items-center justify-between p-2 rounded ${
-          isCompleted && match.scoreA! > match.scoreB! ? 'bg-green-50 font-semibold' : ''
+        {/* Team A */}
+        <div className={`flex items-center justify-between p-2 rounded transition-all ${
+          winner === 'A' 
+            ? 'bg-gradient-to-r from-green-100 to-emerald-100 border border-green-300' 
+            : 'bg-gray-50'
         }`}>
           <div className="flex items-center space-x-2">
-            <Users className="h-4 w-4 text-gray-400" />
-            <span className={!hasTeams && match.teamA.name.includes('Winner') ? 'text-gray-400 italic' : ''}>
-              {match.teamA.name}
-            </span>
+            <Users className={`h-4 w-4 ${winner === 'A' ? 'text-green-600' : 'text-gray-400'}`} />
+            <div className="flex flex-col">
+              <span className={`${!hasTeams && match.teamA.name.includes('Winner') ? 'text-gray-400 italic' : ''} ${winner === 'A' ? 'font-semibold text-green-700' : ''}`}>
+                {match.teamA.name}
+              </span>
+              {winner === 'A' && (
+                <span className="text-xs text-green-600 font-medium flex items-center gap-1">
+                  <CheckCircle className="h-3 w-3" />
+                  WINNER
+                </span>
+              )}
+            </div>
           </div>
-          <span className="text-lg font-mono">{match.scoreA ?? '-'}</span>
+          <span className={`text-lg font-mono ${winner === 'A' ? 'text-green-700 font-bold' : ''}`}>
+            {match.scoreA ?? '-'}
+          </span>
         </div>
         
-        <div className={`flex items-center justify-between p-2 rounded ${
-          isCompleted && match.scoreB! > match.scoreA! ? 'bg-green-50 font-semibold' : ''
+        {/* Team B */}
+        <div className={`flex items-center justify-between p-2 rounded transition-all ${
+          winner === 'B' 
+            ? 'bg-gradient-to-r from-green-100 to-emerald-100 border border-green-300' 
+            : 'bg-gray-50'
         }`}>
           <div className="flex items-center space-x-2">
-            <Users className="h-4 w-4 text-gray-400" />
-            <span className={!hasTeams && match.teamB.name.includes('Winner') ? 'text-gray-400 italic' : ''}>
-              {match.teamB.name}
-            </span>
+            <Users className={`h-4 w-4 ${winner === 'B' ? 'text-green-600' : 'text-gray-400'}`} />
+            <div className="flex flex-col">
+              <span className={`${!hasTeams && match.teamB.name.includes('Winner') ? 'text-gray-400 italic' : ''} ${winner === 'B' ? 'font-semibold text-green-700' : ''}`}>
+                {match.teamB.name}
+              </span>
+              {winner === 'B' && (
+                <span className="text-xs text-green-600 font-medium flex items-center gap-1">
+                  <CheckCircle className="h-3 w-3" />
+                  WINNER
+                </span>
+              )}
+            </div>
           </div>
-          <span className="text-lg font-mono">{match.scoreB ?? '-'}</span>
+          <span className={`text-lg font-mono ${winner === 'B' ? 'text-green-700 font-bold' : ''}`}>
+            {match.scoreB ?? '-'}
+          </span>
         </div>
       </div>
       
@@ -199,7 +235,7 @@ export default function TournamentBracket() {
                   <Trophy className="h-5 w-5 mr-2 text-yellow-500" />
                   August 7, 2025 - Finals Day
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {allKnockoutMatches
                     .filter(({ match }) => match.date === '2025-08-07')
                     .map(({ match, roundName }) => (
@@ -211,25 +247,7 @@ export default function TournamentBracket() {
           </div>
         </div>
       )}
-      
-      {/* Tournament Structure Info */}
-      <div className="mt-8 mb-4 p-4 bg-gray-50 rounded-lg text-sm text-gray-600">
-        <h4 className="font-semibold mb-2">Tournament Structure:</h4>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <h5 className="font-medium text-blue-700 mb-1">Boys Division:</h5>
-            <p>• Group Stage (14 groups) → Second Round (4 groups) → Semi Finals → Final</p>
-            <p>• Group winners advance to Second Round groups (LXA, LXB, LYA, LYB)</p>
-            <p>• Second Round group winners advance to Semi Finals</p>
-          </div>
-          <div>
-            <h5 className="font-medium text-pink-700 mb-1">Girls Division:</h5>
-            <p>• Group Stage (8 groups) → Quarter Finals → Semi Finals → Final</p>
-            <p>• Group winners advance directly to Quarter Finals</p>
-          </div>
-        </div>
       </div>
-    </div>
     </div>
   )
 }
