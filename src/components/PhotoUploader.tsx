@@ -29,7 +29,17 @@ export default function PhotoUploader({ match, onClose, onSelectPhotos }: PhotoU
   const [selectedPhotos, setSelectedPhotos] = useState<Set<string>>(new Set())
   const [filterPeriod, setFilterPeriod] = useState<PhotoPeriod['type'] | 'all'>('all')
   const [previewPhoto, setPreviewPhoto] = useState<PhotoMetadata | null>(null)
-  const [photoStats, setPhotoStats] = useState<any>(null)
+  const [photoStats, setPhotoStats] = useState<{
+    total: number
+    byPeriod: {
+      pre_match: number
+      first_half: number
+      half_time: number
+      second_half: number
+      full_time: number
+      post_match: number
+    }
+  } | null>(null)
 
   useEffect(() => {
     loadPhotos()
