@@ -156,7 +156,7 @@ export default function MatchEditor({ match, onClose, onSave }: MatchEditorProps
         {/* Error messages */}
         {errors.length > 0 && (
           <div className="mx-4 mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            {errors.map((error, idx) => (
+            {errors.map((error: string, idx: number) => (
               <p key={idx} className="text-red-700 text-sm">{error}</p>
             ))}
           </div>
@@ -248,7 +248,7 @@ export default function MatchEditor({ match, onClose, onSave }: MatchEditorProps
                   onChange={(e) => handleFieldChange('status', e.target.value)}
                   className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cbl-orange"
                 >
-                  {statuses.map(status => (
+                  {statuses.map((status: string) => (
                     <option key={status} value={status}>
                       {status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')}
                     </option>
@@ -301,7 +301,7 @@ export default function MatchEditor({ match, onClose, onSave }: MatchEditorProps
                   onChange={(e) => handleFieldChange('venue', e.target.value)}
                   className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cbl-orange"
                 >
-                  {venues.map(venue => (
+                  {venues.map((venue: string) => (
                     <option key={venue} value={venue}>{venue}</option>
                   ))}
                 </select>
@@ -317,7 +317,7 @@ export default function MatchEditor({ match, onClose, onSave }: MatchEditorProps
                   className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cbl-orange"
                 >
                   <option value="">Select Court</option>
-                  {courts.map(court => (
+                  {courts.map((court: string) => (
                     <option key={court} value={court}>{court}</option>
                   ))}
                 </select>
@@ -381,7 +381,7 @@ export default function MatchEditor({ match, onClose, onSave }: MatchEditorProps
                 Recent Changes
               </h3>
               <div className="bg-gray-50 rounded-lg p-3 space-y-2 max-h-32 overflow-y-auto">
-                {editedMatch.change_log.slice(-3).reverse().map((log, idx) => (
+                {editedMatch.change_log.slice(-3).reverse().map((log: any, idx: number) => (
                   <div key={idx} className="text-sm">
                     <span className="text-gray-500">
                       {new Date(log.timestamp).toLocaleString()}
