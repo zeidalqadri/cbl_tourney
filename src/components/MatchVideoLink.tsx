@@ -23,7 +23,7 @@ export function MatchVideoLink({ match, className = '' }: MatchVideoLinkProps) {
   const [loading, setLoading] = useState(true);
   const [showPlayer, setShowPlayer] = useState(false);
 
-  const API_URL = 'https://cbl-youtube-api.zeidalqadri.workers.dev'; // New API - deploy simple-youtube-api.js to this URL
+  const API_URL = 'https://cbl-coverage-api.zeidalqadri.workers.dev';
 
   useEffect(() => {
     findMatchVideo();
@@ -237,7 +237,7 @@ export function MatchVideoBadge({ match }: { match: Match }) {
   const checkForVideo = async () => {
     try {
       // Check live streams first
-      const liveResponse = await fetch('https://cbl-youtube-api.zeidalqadri.workers.dev/api/youtube/live');
+      const liveResponse = await fetch('https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/live');
       const liveData = await liveResponse.json();
       
       // Smart matching for live videos
@@ -275,7 +275,7 @@ export function MatchVideoBadge({ match }: { match: Match }) {
       
       for (const query of searchQueries) {
         const response = await fetch(
-          `https://cbl-youtube-api.zeidalqadri.workers.dev/api/youtube/search?q=${encodeURIComponent(query)}&limit=50`
+          `https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/search?q=${encodeURIComponent(query)}&limit=50`
         );
         const data = await response.json();
         

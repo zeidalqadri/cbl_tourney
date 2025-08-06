@@ -42,7 +42,7 @@ export default function StreamView({ onLiveStatusChange, selectedMatchNumber, se
 
   const checkLiveStream = async () => {
     try {
-      const response = await fetch('https://cbl-youtube-api.zeidalqadri.workers.dev/api/youtube/live')
+      const response = await fetch('https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/live')
       const data = await response.json()
       
       if (data.live && data.live.length > 0) {
@@ -65,7 +65,7 @@ export default function StreamView({ onLiveStatusChange, selectedMatchNumber, se
       setLoading(true)
       
       // First check if it's in live videos
-      const liveResponse = await fetch('https://cbl-youtube-api.zeidalqadri.workers.dev/api/youtube/live')
+      const liveResponse = await fetch('https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/live')
       const liveData = await liveResponse.json()
       
       // Smart matching for live videos
@@ -113,7 +113,7 @@ export default function StreamView({ onLiveStatusChange, selectedMatchNumber, se
       
       for (const query of searchQueries) {
         const searchResponse = await fetch(
-          `https://cbl-youtube-api.zeidalqadri.workers.dev/api/youtube/search?q=${encodeURIComponent(query)}&limit=50`
+          `https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/search?q=${encodeURIComponent(query)}&limit=50`
         )
         const searchData = await searchResponse.json()
         
