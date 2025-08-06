@@ -122,8 +122,7 @@ export default function PhotoManagementPage() {
     // Date filter
     if (filterDate) {
       filtered = filtered.filter(match => {
-        const matchDate = new Date(match.scheduledTime).toISOString().split('T')[0]
-        return matchDate === filterDate
+        return match.date === filterDate
       })
     }
 
@@ -254,10 +253,10 @@ export default function PhotoManagementPage() {
                       <div className="mt-2 flex items-center gap-4 text-sm text-gray-600">
                         <span className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
-                          {new Date(match.scheduledTime).toLocaleDateString()}
+                          {new Date(match.date).toLocaleDateString()} {match.time}
                         </span>
                         <span>
-                          {match.venue} • {match.court}
+                          {match.venue}
                         </span>
                       </div>
 
