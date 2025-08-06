@@ -236,6 +236,9 @@ export function MatchVideoBadge({ match }: { match: Match }) {
 
   const checkForVideo = async () => {
     try {
+      const teamAName = match.teamA?.name || '';
+      const teamBName = match.teamB?.name || '';
+      
       // Check live streams first
       const liveResponse = await fetch('https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/live');
       const liveData = await liveResponse.json();
