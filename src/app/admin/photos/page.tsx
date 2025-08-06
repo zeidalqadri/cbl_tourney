@@ -48,28 +48,29 @@ export default function PhotoManagementPage() {
           return {
             id: match.id,
             matchNumber: match.match_number,
+            date: scheduledDate.toISOString().split('T')[0],
+            time: scheduledDate.toTimeString().split(' ')[0].substring(0, 5),
+            venue: match.venue || 'SJKC YU HWA',
+            division: match.division || 'boys',
+            round: String(match.round || '1'),
             teamA: {
               id: match.team_a_id,
               name: match.team_a_name || 'Team A',
-              score: match.team_a_score || 0,
-              logoUrl: match.team_a_logo
+              group: match.metadata?.group || match.team_a_group || 'A',
+              division: match.division || 'boys',
+              emblemUrl: match.team_a_logo
             },
             teamB: {
               id: match.team_b_id,
               name: match.team_b_name || 'Team B',
-              score: match.team_b_score || 0,
-              logoUrl: match.team_b_logo
+              group: match.metadata?.group || match.team_b_group || 'A',
+              division: match.division || 'boys',
+              emblemUrl: match.team_b_logo
             },
-            status: match.status,
-            scheduledTime: match.scheduled_time,
-            venue: match.venue,
-            court: match.court,
-            division: match.division,
-            metadata: match.metadata,
-            // Add required properties from Match interface
-            date: scheduledDate.toISOString().split('T')[0],
-            time: scheduledDate.toTimeString().split(' ')[0].substring(0, 5),
-            round: match.round || 1
+            scoreA: match.team_a_score || undefined,
+            scoreB: match.team_b_score || undefined,
+            status: match.status || 'scheduled',
+            metadata: match.metadata
           }
         })
         
@@ -243,9 +244,9 @@ export default function PhotoManagementPage() {
                         <div className="font-medium">
                           {match.teamA.name} vs {match.teamB.name}
                         </div>
-                        {match.status === 'completed' && (
+                        {match.status === 'completed' && match.scoreA !== undefined && match.scoreB !== undefined && (
                           <div className="text-lg font-bold text-gray-700">
-                            {match.teamA.score} - {match.teamB.score}
+                            {match.scoreA} - {match.scoreB}
                           </div>
                         )}
                       </div>
