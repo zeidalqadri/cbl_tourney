@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createBrowserClient } from '@supabase/ssr';
 import { Copy, CheckCircle, Play, Info } from 'lucide-react';
 import { Match } from '@/types/tournament';
 
@@ -16,7 +16,10 @@ export function StreamingSetup({ onlyUpcoming = true }: StreamingSetupProps) {
   const [copied, setCopied] = useState(false);
   const [streamType, setStreamType] = useState<'live' | 'recording'>('live');
   
-  const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   useEffect(() => {
     fetchMatches();
@@ -313,7 +316,10 @@ export function StreamingQuickSetup() {
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [copied, setCopied] = useState(false);
   
-  const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   useEffect(() => {
     fetchUpcomingMatches();
