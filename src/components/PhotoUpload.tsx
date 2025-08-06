@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { API_BASE_URL } from '@/lib/api-config'
 import { motion } from 'framer-motion'
 import { createBrowserClient } from '@supabase/ssr'
 import { 
@@ -106,7 +107,7 @@ export default function PhotoUpload({ onClose, matchId, venue: initialVenue }: P
       }, {} as Record<number, string>)
       formData.append('captions', JSON.stringify(captions))
 
-      const response = await fetch('/api/media/upload', {
+      const response = await fetch(`${API_BASE_URL}/api/media/upload`, {
         method: 'POST',
         body: formData
       })

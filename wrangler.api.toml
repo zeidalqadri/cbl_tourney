@@ -1,0 +1,33 @@
+# Cloudflare Worker configuration for API endpoints
+name = "cbl-tourney-api"
+main = "workers/api.ts"
+compatibility_date = "2025-01-01"
+
+# Worker route - handles all /api/* requests
+routes = [
+  { pattern = "cbl-tourney.pages.dev/api/*", custom_domain = true },
+  { pattern = "cbl-basketball-tracker.pages.dev/api/*", custom_domain = true }
+]
+
+# Enable Node.js compatibility if needed
+compatibility_flags = ["nodejs_compat"]
+
+# Environment variables (add your secrets here)
+[vars]
+ENVIRONMENT = "production"
+
+# Future: Add KV namespaces for caching
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "your-kv-namespace-id"
+
+# Future: Add D1 database for persistence
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "tourney-db"
+# database_id = "your-database-id"
+
+# Future: Add R2 bucket for file storage
+# [[r2_buckets]]
+# binding = "STORAGE"
+# bucket_name = "tourney-storage"

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { API_BASE_URL } from '@/lib/api-config'
 import { Match } from '@/types/tournament'
 import { supabase } from '@/lib/supabase'
 import PhotoUploader from '@/components/PhotoUploader'
@@ -94,7 +95,7 @@ export default function PhotoManagementPage() {
     
     for (const match of matchesToCheck) {
       try {
-        const response = await fetch(`/api/photos?match=${match.matchNumber}&stats=true`)
+        const response = await fetch(`${API_BASE_URL}/api/photos?match=${match.matchNumber}&stats=true`)
         const data = await response.json()
         if (data.success && data.stats) {
           stats.set(match.matchNumber, data.stats)

@@ -24,9 +24,11 @@ export interface PhotoPeriod {
 }
 
 // Get photos from a specific match folder (via API)
+import { API_BASE_URL } from './api-config'
+
 export async function getMatchPhotos(matchNumber: number): Promise<PhotoMetadata[]> {
   try {
-    const response = await fetch(`/api/photos?match=${matchNumber}`)
+    const response = await fetch(`${API_BASE_URL}/api/photos?match=${matchNumber}`)
     const data = await response.json()
     
     if (data.success) {
@@ -44,7 +46,7 @@ export async function getMatchPhotos(matchNumber: number): Promise<PhotoMetadata
 // Get photo statistics for a match (via API)
 export async function getMatchPhotoStats(matchNumber: number) {
   try {
-    const response = await fetch(`/api/photos?match=${matchNumber}&stats=true`)
+    const response = await fetch(`${API_BASE_URL}/api/photos?match=${matchNumber}&stats=true`)
     const data = await response.json()
     
     if (data.success && data.stats) {
@@ -86,7 +88,7 @@ export async function getMatchPhotoStats(matchNumber: number) {
 // Search photos (via API)
 export async function searchPhotos(query: string): Promise<PhotoMetadata[]> {
   try {
-    const response = await fetch(`/api/photos?q=${encodeURIComponent(query)}`)
+    const response = await fetch(`${API_BASE_URL}/api/photos?q=${encodeURIComponent(query)}`)
     const data = await response.json()
     
     if (data.success) {
