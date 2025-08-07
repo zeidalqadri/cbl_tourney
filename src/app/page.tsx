@@ -52,38 +52,7 @@ export default function Home() {
       </header>
 
       <div className="container mx-auto px-4 py-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">
-              Welcome to MSS Melaka Basketball Tournament 2025
-            </h2>
-            <p className="text-gray-600 mb-6">
-              The official tournament tracking system for U-12 Basketball Championship
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-              <div className="bg-gradient-to-br from-mss-turquoise/10 to-transparent p-6 rounded-lg">
-                <div className="text-3xl font-bold text-mss-turquoise">107</div>
-                <div className="text-gray-600 mt-2">Teams Participating</div>
-              </div>
-              <div className="bg-gradient-to-br from-cbl-orange/10 to-transparent p-6 rounded-lg">
-                <div className="text-3xl font-bold text-cbl-orange">129</div>
-                <div className="text-gray-600 mt-2">Total Matches</div>
-              </div>
-              <div className="bg-gradient-to-br from-score-burst/10 to-transparent p-6 rounded-lg">
-                <div className="text-3xl font-bold text-score-burst">4</div>
-                <div className="text-gray-600 mt-2">Days of Competition</div>
-              </div>
-            </div>
-            <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-gray-700">
-                <strong>Tournament Dates:</strong> August 4-7, 2025
-              </p>
-              <p className="text-sm text-gray-700 mt-2">
-                <strong>Location:</strong> Melaka, Malaysia
-              </p>
-            </div>
-          </div>
-        </div>
+        <MatchList />
       </div>
     </main>
   )
