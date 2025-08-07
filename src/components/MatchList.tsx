@@ -97,12 +97,15 @@ export default function MatchList() {
               <button
                 key={date}
                 onClick={() => setSelectedDate(date)}
-                className={`relative p-4 rounded-lg transition-all ${
+                aria-pressed={isActive}
+                aria-label={`View matches for ${label} on ${new Date(date).toLocaleDateString('en-MY', { weekday: 'long', day: 'numeric', month: 'long' })}`}
+                className={`relative p-4 rounded-lg transition-all focus:ring-2 focus:ring-mss-turquoise focus:outline-none ${
                   isActive
                     ? 'bg-gradient-to-r from-mss-turquoise to-teal-500 text-white shadow-lg scale-105'
                     : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
+                {isActive && <div className="sr-only">Currently viewing</div>}
                 {hasLive && (
                   <div className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 )}
@@ -133,7 +136,7 @@ export default function MatchList() {
       {currentDayMatches.length > 0 ? (
         <div className="space-y-4">
           <h3 className="font-display text-2xl text-gray-700 dark:text-gray-300">
-            DAY'S MATCHES
+            DAY&apos;S MATCHES
             <span className="text-sm ml-2 text-gray-500">({currentDayMatches.length} total)</span>
           </h3>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

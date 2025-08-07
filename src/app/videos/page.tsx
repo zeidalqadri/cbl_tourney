@@ -1,9 +1,16 @@
+import { Suspense } from 'react'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { YouTubeFeed } from '@/components/YouTubeFeed';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Match Videos - CBL Tournament',
   description: 'Watch live streams and recorded matches from the CBL Tournament',
+  openGraph: {
+    title: 'CBL Tournament Videos',
+    description: 'Live streams and recorded matches',
+    type: 'website',
+  }
 };
 
 export default function VideosPage() {
@@ -19,7 +26,9 @@ export default function VideosPage() {
         </div>
 
         {/* YouTube Feed */}
-        <YouTubeFeed />
+        <Suspense fallback={<LoadingSpinner text="Loading videos..." />}>
+          <YouTubeFeed />
+        </Suspense>
 
         {/* Instructions */}
         <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
@@ -28,10 +37,10 @@ export default function VideosPage() {
             Help us capture every moment! When streaming to YouTube:
           </p>
           <ul className="list-disc list-inside space-y-1 text-gray-600">
-            <li>Include match number in title (e.g., "Match #23")</li>
+            <li>Include match number in title (e.g., &quot;Match #23&quot;)</li>
             <li>Add venue name (Yu Hwa, Malim, Kuala Nerang, or Gemencheh)</li>
             <li>Mention teams and division (Boys/Girls)</li>
-            <li>Example: "Match #23 - Team A vs Team B - Boys @ Yu Hwa"</li>
+            <li>Example: &quot;Match #23 - Team A vs Team B - Boys @ Yu Hwa&quot;</li>
           </ul>
         </div>
       </div>

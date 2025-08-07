@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import { Match } from '@/types/tournament'
 import { formatTime } from '@/lib/utils'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -17,7 +17,7 @@ interface EnhancedMatchCardProps {
   match: Match
 }
 
-export default function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
+const EnhancedMatchCard = memo(function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
   const [prevScoreA, setPrevScoreA] = useState(match.scoreA)
   const [prevScoreB, setPrevScoreB] = useState(match.scoreB)
   const [scoreAnimateA, setScoreAnimateA] = useState(false)
@@ -309,4 +309,15 @@ export default function EnhancedMatchCard({ match }: EnhancedMatchCardProps) {
       )}
     </motion.div>
   )
-}
+}, (prevProps, nextProps) => {
+  // Custom comparison to prevent unnecessary re-renders
+  return (
+    prevProps.match.id === nextProps.match.id &&
+    prevProps.match.scoreA === nextProps.match.scoreA &&
+    prevProps.match.scoreB === nextProps.match.scoreB &&
+    prevProps.match.status === nextProps.match.status &&
+    prevProps.match.updatedAt === nextProps.match.updatedAt
+  )
+})
+
+export default EnhancedMatchCard

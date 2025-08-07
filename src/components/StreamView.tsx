@@ -42,8 +42,23 @@ export default function StreamView({ onLiveStatusChange, selectedMatchNumber, se
 
   const checkLiveStream = async () => {
     try {
-      const response = await fetch('https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/live')
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // Reduced timeout
+      
+      const response = await fetch('https://cbl-coverage-api.zeidalqadri.workers.dev/api/youtube/live', {
+        signal: controller.signal
+      })
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
       const data = await response.json()
+      // Add response validation
+      if (!data || typeof data !== 'object') {
+        throw new Error('Invalid response format')
+      }
       
       if (data.live && data.live.length > 0) {
         setLiveVideoId(data.live[0].videoId)
@@ -53,7 +68,13 @@ export default function StreamView({ onLiveStatusChange, selectedMatchNumber, se
         onLiveStatusChange?.(false)
       }
     } catch (error) {
-      console.error('Error checking live stream:', error)
+      if (error.name === 'AbortError') {
+        console.warn('Stream check timed out - continuing with cached data');
+      } else {
+        console.error('Stream check failed:', error)
+      }
+      // Set fallback state instead of just failing
+      setLiveVideoId(null)
       onLiveStatusChange?.(false)
     } finally {
       setLoading(false)
@@ -303,7 +324,7 @@ export default function StreamView({ onLiveStatusChange, selectedMatchNumber, se
             <div>
               <h4 className="font-semibold text-yellow-800 dark:text-yellow-200">No Live Stream</h4>
               <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
-                There's no live stream at the moment. Check back during tournament hours for live coverage.
+                There&apos;s no live stream at the moment. Check back during tournament hours for live coverage.
               </p>
             </div>
           </div>

@@ -1,10 +1,7 @@
-# Cloudflare Pages configuration - Pure Cloudflare, no Vercel
-name = "cbl-basketball-tracker"
+# Cloudflare Pages configuration
+name = "cbltour"
 compatibility_date = "2025-01-01"
-pages_build_output_dir = "out"  # Next.js static export directory
-
-# No Node.js compatibility needed for static export
-# API routes handled by separate Worker
+pages_build_output_dir = "out"
 
 [placement]
 mode = "smart"
