@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react'
 import { Match } from '@/types/tournament'
 import { getMatches, updateMatchScore } from '@/lib/tournament-api'
-import { Camera, Upload } from 'lucide-react'
+import { progressMatchWinner } from '@/lib/tournament-progression'
+import { Camera, Upload, ChevronRight } from 'lucide-react'
 import PhotoUpload from './PhotoUpload'
+import MatchProgressionButton from './MatchProgressionButton'
 import Link from 'next/link'
 
 export default function ScoreInput() {
@@ -15,6 +17,8 @@ export default function ScoreInput() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [loading, setLoading] = useState(true)
   const [showPhotoUpload, setShowPhotoUpload] = useState(false)
+  const [lastCompletedMatch, setLastCompletedMatch] = useState<Match | null>(null)
+  const [showProgression, setShowProgression] = useState(false)
 
   useEffect(() => {
     loadTodayMatches()
@@ -76,6 +80,23 @@ export default function ScoreInput() {
         parseInt(scoreA),
         parseInt(scoreB)
       )
+      
+      // Find the updated match
+      const updatedMatch = matches.find(m => m.id === selectedMatch)
+      if (updatedMatch) {
+        const completedMatch = {
+          ...updatedMatch,
+          scoreA: parseInt(scoreA),
+          scoreB: parseInt(scoreB),
+          status: 'completed' as const
+        }
+        setLastCompletedMatch(completedMatch)
+        
+        // Show progression option for knockout matches
+        if (updatedMatch.round !== 'Group Stage') {
+          setShowProgression(true)
+        }
+      }
       
       // Reset form
       setSelectedMatch('')
@@ -201,6 +222,29 @@ export default function ScoreInput() {
             <li>• Bracket will update in real-time</li>
           </ul>
         </div>
+
+        {/* Match Progression Section */}
+        {showProgression && lastCompletedMatch && (
+          <div className="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-blue-900">
+              <ChevronRight className="w-5 h-5" />
+              Match Completed!
+            </h3>
+            <p className="text-sm text-blue-700 mb-4">
+              {lastCompletedMatch.teamA.name} vs {lastCompletedMatch.teamB.name} - 
+              Score: {lastCompletedMatch.scoreA} - {lastCompletedMatch.scoreB}
+            </p>
+            <MatchProgressionButton
+              match={lastCompletedMatch}
+              mode="match"
+              onProgress={() => {
+                setShowProgression(false)
+                setLastCompletedMatch(null)
+                loadTodayMatches()
+              }}
+            />
+          </div>
+        )}
 
         {/* Photo Upload Section */}
         <div className="mt-6 bg-white rounded-lg shadow-sm p-6">

@@ -1,4 +1,5 @@
 import ScoreInput from '@/components/ScoreInput'
+import { TournamentProgressionPanel } from '@/components/MatchProgressionButton'
 import Link from 'next/link'
 import { Settings, Calendar, Camera } from 'lucide-react'
 
@@ -47,6 +48,11 @@ export default function AdminPage() {
               Tournament configuration
             </p>
           </div>
+        </div>
+        
+        {/* Tournament Progression Panel */}
+        <div className="mb-8">
+          <TournamentProgressionPanel />
         </div>
         
         <ScoreInput />
