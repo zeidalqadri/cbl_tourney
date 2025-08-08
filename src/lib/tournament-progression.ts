@@ -135,11 +135,23 @@ export async function progressMatchWinner(matchId: string) {
   
   if (error) throw error
   if (!match) throw new Error('Match not found')
-  if (match.status !== 'completed') throw new Error('Match not completed')
+  if (match.status !== 'completed') {
+    console.log(`Match ${match.match_number} not completed, cannot progress winner`)
+    return
+  }
+  if (!match.winner_id) {
+    console.log(`Match ${match.match_number} has no winner set, cannot progress`)
+    return
+  }
   
-  // Determine winner
-  const winnerId = match.score1 > match.score2 ? match.team1_id : match.team2_id
-  const winnerTeam = match.score1 > match.score2 ? match.team1 : match.team2
+  // Use the winner_id from the match (already determined when match was completed)
+  const winnerId = match.winner_id
+  const winnerTeam = match.winner_id === match.team1_id ? match.team1 : match.team2
+  
+  if (!winnerId || !winnerTeam) {
+    console.log('Winner not properly set in match')
+    return
+  }
   
   // Determine next match based on current round and match type
   let nextRound: number
@@ -158,6 +170,7 @@ export async function progressMatchWinner(matchId: string) {
     nextRound = 4
     nextMatchType = 'final'
   } else {
+    console.log(`No progression defined for match type: ${match.metadata?.type || 'unknown'}`)
     return // No progression from final or group stage
   }
   
@@ -207,6 +220,24 @@ export async function progressMatchWinner(matchId: string) {
   }
   
   if (nextMatch) {
+    // Check if team is already in the next match (prevent duplicates)
+    if (nextMatch.team1_id === winnerId || nextMatch.team2_id === winnerId) {
+      console.log(`Team ${winnerTeam.team_name} already in match ${nextMatch.match_number}`)
+      return winnerId
+    }
+    
+    // Check if team is in any other match at the same round (prevent conflicts)
+    const { data: conflictCheck } = await supabase
+      .from('tournament_matches')
+      .select('match_number')
+      .eq('round', nextRound)
+      .or(`team1_id.eq.${winnerId},team2_id.eq.${winnerId}`)
+    
+    if (conflictCheck && conflictCheck.length > 0) {
+      console.log(`Team ${winnerTeam.team_name} already in another match at round ${nextRound}`)
+      return winnerId
+    }
+    
     // Determine which slot to fill based on placeholder or availability
     let updateData: any = {}
     
