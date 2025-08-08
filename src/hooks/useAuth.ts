@@ -47,10 +47,10 @@ export function useAuth() {
   const login = useCallback((password: string): boolean => {
     // TODO: Implement server-side authentication for better security
     // Current implementation uses client-side validation which can be bypassed
-    // Remove hardcoded fallback password and implement proper auth flow
-    const correctPassword = process.env.NEXT_PUBLIC_SCORE_INPUT_PASSWORD
+    // Temporary restoration of fallback for production use
+    const correctPassword = process.env.NEXT_PUBLIC_SCORE_INPUT_PASSWORD || 'cbl2025'
     
-    if (correctPassword && password === correctPassword) {
+    if (password === correctPassword) {
       const authState: AuthState = {
         isAuthenticated: true,
         lastAuthTime: Date.now()
