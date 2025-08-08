@@ -18,11 +18,13 @@ const nextConfig = {
       },
     ],
   },
+  // TODO: Re-enable TypeScript and ESLint checking after fixing all errors
+  // These should be set to false for production builds
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true, // Should be false in production
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true, // Should be false in production
   },
   swcMinify: true, // Use SWC for faster minification
   compress: true, // Enable compression
