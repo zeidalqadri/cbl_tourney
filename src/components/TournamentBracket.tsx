@@ -3,16 +3,21 @@
 import { useEffect, useState } from 'react'
 import { Match, TournamentBracket as BracketType } from '@/types/tournament'
 import { getTournamentBracket, subscribeToMatches } from '@/lib/tournament-api'
-import { Trophy, Users, ChevronRight, CheckCircle } from 'lucide-react'
+import { Trophy, Users, ChevronRight, CheckCircle, AlertCircle } from 'lucide-react'
+import MatchProgressionButton from './MatchProgressionButton'
 
 interface BracketMatchProps {
   match: Match
   roundName: string
+  showAdminControls?: boolean
+  onProgressComplete?: () => void
 }
 
-function BracketMatch({ match, roundName }: BracketMatchProps) {
+function BracketMatch({ match, roundName, showAdminControls = false, onProgressComplete }: BracketMatchProps) {
   const isCompleted = match.status === 'completed'
   const hasTeams = match.teamA.id && match.teamB.id
+  const canProgress = isCompleted && match.round !== 'Final' && hasTeams
+  const needsTeams = !match.teamA.id || !match.teamB.id
   
   // Determine winner
   const getWinner = () => {
@@ -99,6 +104,31 @@ function BracketMatch({ match, roundName }: BracketMatchProps) {
         </div>
         <div>{match.venue}</div>
       </div>
+      
+      {/* Progression Status Indicators */}
+      {needsTeams && (
+        <div className="mt-3 flex items-center gap-2 text-amber-600 bg-amber-50 p-2 rounded">
+          <AlertCircle className="w-4 h-4" />
+          <span className="text-xs">Waiting for teams from previous matches</span>
+        </div>
+      )}
+      
+      {canProgress && (
+        <div className="mt-3 border-t pt-3">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" />
+            <span className="text-xs text-yellow-700 font-medium">Ready for progression</span>
+          </div>
+          
+          {showAdminControls && (
+            <MatchProgressionButton
+              match={match}
+              mode="match"
+              onProgress={onProgressComplete}
+            />
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -111,9 +141,14 @@ interface BracketData {
 export default function TournamentBracket() {
   const [brackets, setBrackets] = useState<BracketData>({ boys: null, girls: null })
   const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     loadBrackets()
+    
+    // Check if user is admin (simplified check - in production use proper auth)
+    const pathname = window.location.pathname
+    setIsAdmin(pathname.includes('/admin'))
     
     // Subscribe to match updates
     const unsubscribe = subscribeToMatches(async () => {
@@ -223,7 +258,13 @@ export default function TournamentBracket() {
                 {allKnockoutMatches
                   .filter(({ match }) => match.date === '2025-08-06')
                   .map(({ match, roundName }) => (
-                    <BracketMatch key={match.id} match={match} roundName={roundName} />
+                    <BracketMatch 
+                      key={match.id} 
+                      match={match} 
+                      roundName={roundName}
+                      showAdminControls={isAdmin}
+                      onProgressComplete={loadBrackets}
+                    />
                   ))}
               </div>
             </div>
@@ -239,7 +280,13 @@ export default function TournamentBracket() {
                   {allKnockoutMatches
                     .filter(({ match }) => match.date === '2025-08-07')
                     .map(({ match, roundName }) => (
-                      <BracketMatch key={match.id} match={match} roundName={roundName} />
+                      <BracketMatch 
+                      key={match.id} 
+                      match={match} 
+                      roundName={roundName}
+                      showAdminControls={isAdmin}
+                      onProgressComplete={loadBrackets}
+                    />
                     ))}
                 </div>
               </div>

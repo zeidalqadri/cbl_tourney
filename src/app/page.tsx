@@ -1,4 +1,5 @@
 import MatchList from '@/components/MatchList'
+import TournamentStatusDashboard from '@/components/TournamentStatusDashboard'
 import Image from 'next/image'
 
 export default function Home() {
@@ -52,6 +53,9 @@ export default function Home() {
       </header>
 
       <div className="container mx-auto px-4 py-6">
+        <div className="mb-6">
+          <TournamentStatusDashboard />
+        </div>
         <MatchList />
       </div>
     </main>
