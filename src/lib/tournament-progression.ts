@@ -28,17 +28,26 @@ export async function checkGroupStageComplete(division: Division): Promise<boole
  */
 export async function getQualifiedTeams(
   division: Division,
-  qualifiersPerGroup: number = 2
+  qualifiersPerGroup: number = 1
 ): Promise<Map<string, Team[]>> {
   const qualifiedTeams = new Map<string, Team[]>()
   
-  // Get all groups for this division
-  const groups = division === 'boys' ? ['A', 'B', 'C', 'D'] : ['E', 'F', 'G', 'H']
+  // Get all groups for this division - using actual pool names from database
+  const groups = division === 'boys' 
+    ? ['LB', 'LC', 'LD', 'LE', 'LG', 'LH', 'LI', 'LK', 'LL', 'LM', 'LN']
+    : ['PA', 'PB', 'PC', 'PD', 'PE', 'PF', 'PG', 'PH']
   
   for (const group of groups) {
     const standings = await getGroupStandings(group, division)
-    const qualified = await progressionService.determineQualifiedTeams(standings, qualifiersPerGroup)
-    qualifiedTeams.set(group, qualified)
+    if (standings.length > 0) {
+      // For tournament rules: only top team from each group advances
+      const qualified = standings.slice(0, qualifiersPerGroup).map(s => ({
+        id: s.team_id,
+        name: s.team_name,
+        division: s.division
+      } as Team))
+      qualifiedTeams.set(group, qualified)
+    }
   }
   
   return qualifiedTeams
@@ -54,8 +63,8 @@ export async function progressToKnockoutStage(division: Division) {
     throw new Error('Group stage not complete for ' + division + ' division')
   }
   
-  // Get qualified teams
-  const qualifiedTeams = await getQualifiedTeams(division, 2)
+  // Get qualified teams (only 1 per group advances)
+  const qualifiedTeams = await getQualifiedTeams(division, 1)
   
   // Generate quarter-final matchups
   const quarterFinalMatchups = progressionService.generateKnockoutMatchups(
@@ -136,14 +145,20 @@ export async function progressMatchWinner(matchId: string) {
   let nextRound: number
   let nextMatchType: string
   
-  if (match.metadata?.type === 'quarter_final') {
+  if (match.metadata?.type === 'second_round') {
+    // Boys Second Round progresses to Semi Final
+    nextRound = 3
+    nextMatchType = 'semi_final'
+  } else if (match.metadata?.type === 'quarter_final') {
+    // Girls Quarter Final progresses to Semi Final
     nextRound = 3
     nextMatchType = 'semi_final'
   } else if (match.metadata?.type === 'semi_final') {
+    // Semi Final progresses to Final for both divisions
     nextRound = 4
     nextMatchType = 'final'
   } else {
-    return // No progression from final
+    return // No progression from final or group stage
   }
   
   // Find the next match that's waiting for this winner
@@ -257,6 +272,74 @@ export async function generateMatchCards(date: string) {
   }
   
   return cards
+}
+
+/**
+ * Progress all completed matches that haven't been progressed yet
+ */
+export async function progressAllCompletedMatches() {
+  const results = {
+    processed: 0,
+    errors: 0,
+    matches: [] as any[]
+  }
+  
+  // Get all completed matches from knockout rounds
+  const { data: completedMatches, error } = await supabase
+    .from('tournament_matches')
+    .select(`
+      *,
+      team1:tournament_teams!tournament_matches_team1_id_fkey(*),
+      team2:tournament_teams!tournament_matches_team2_id_fkey(*)
+    `)
+    .eq('tournament_id', TOURNAMENT_ID)
+    .eq('status', 'completed')
+    .gte('round', 2) // Only knockout rounds
+    .order('round', { ascending: true })
+    .order('match_number', { ascending: true })
+  
+  if (error) throw error
+  
+  // Filter matches that need progression (not finals and have scores)
+  const matchesToProgress = completedMatches?.filter(match => {
+    const hasScores = match.score1 !== null && match.score2 !== null
+    const notFinal = match.metadata?.type !== 'final'
+    const hasTeams = match.team1_id && match.team2_id
+    
+    // Check if winner already progressed by looking for them in next round
+    if (hasScores && notFinal && hasTeams) {
+      const winnerId = match.score1 > match.score2 ? match.team1_id : match.team2_id
+      // TODO: Could check if winner is already in next round, but for now we'll try to progress all
+      return true
+    }
+    return false
+  }) || []
+  
+  // Process matches in order (important for bracket integrity)
+  for (const match of matchesToProgress) {
+    try {
+      await progressMatchWinner(match.id)
+      results.processed++
+      results.matches.push({
+        matchId: match.id,
+        matchNumber: match.match_number,
+        round: match.metadata?.type || `Round ${match.round}`,
+        winner: match.score1 > match.score2 ? match.team1?.team_name : match.team2?.team_name,
+        status: 'progressed'
+      })
+    } catch (err) {
+      results.errors++
+      results.matches.push({
+        matchId: match.id,
+        matchNumber: match.match_number,
+        round: match.metadata?.type || `Round ${match.round}`,
+        status: 'error',
+        error: err instanceof Error ? err.message : 'Unknown error'
+      })
+    }
+  }
+  
+  return results
 }
 
 /**

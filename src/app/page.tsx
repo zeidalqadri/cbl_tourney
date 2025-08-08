@@ -1,5 +1,4 @@
-import MatchList from '@/components/MatchList'
-import TournamentStatusDashboard from '@/components/TournamentStatusDashboard'
+import NavigationTabs from '@/components/NavigationTabs'
 import Image from 'next/image'
 
 export default function Home() {
@@ -52,12 +51,7 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-6">
-        <div className="mb-6">
-          <TournamentStatusDashboard />
-        </div>
-        <MatchList />
-      </div>
+      <NavigationTabs />
     </main>
   )
 }

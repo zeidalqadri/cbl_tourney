@@ -321,7 +321,7 @@ export async function getTeamsWithQualification(division?: 'boys' | 'girls') {
   return data?.map(dbTeamToTeamWithQualification) || []
 }
 
-// Get enhanced group standings with qualification indicators
+// Get enhanced group standings with qualification indicators and positions
 export async function getEnhancedGroupStandings(groupName: string, division: 'boys' | 'girls'): Promise<GroupStanding[]> {
   const standings = await getGroupStandings(groupName, division)
   

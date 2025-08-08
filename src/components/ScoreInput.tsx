@@ -92,9 +92,16 @@ export default function ScoreInput() {
         }
         setLastCompletedMatch(completedMatch)
         
-        // Show progression option for knockout matches
-        if (updatedMatch.round !== 'Group Stage') {
-          setShowProgression(true)
+        // Auto-progress winner for knockout matches
+        if (updatedMatch.round !== 'Group Stage' && updatedMatch.round !== 'Round 1') {
+          try {
+            await progressMatchWinner(selectedMatch)
+            console.log(`✅ Winner progressed from ${updatedMatch.round}`)
+          } catch (progressError) {
+            console.error('Error progressing winner:', progressError)
+            // Still show the manual progression button if auto-progression fails
+            setShowProgression(true)
+          }
         }
       }
       

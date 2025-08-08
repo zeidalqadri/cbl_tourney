@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { GroupStanding } from '@/types/tournament'
-import { getEnhancedGroupStandings, subscribeToMatches, subscribeToQualificationUpdates } from '@/lib/tournament-api'
+import { getEnhancedGroupStandings, subscribeToMatches } from '@/lib/tournament-api'
 import { Trophy, CheckCircle, AlertCircle, XCircle, Target, TrendingUp } from 'lucide-react'
 
 interface GroupStandingsProps {
@@ -10,29 +10,46 @@ interface GroupStandingsProps {
   division: 'boys' | 'girls'
 }
 
-function QualificationIndicator({ status, position }: { status?: string; position?: number }) {
+function QualificationIndicator({ status, position, allComplete }: { status?: string; position?: number; allComplete?: boolean }) {
   if (position === 1) {
     if (status === 'through') {
       return (
         <div className="flex items-center text-green-600">
-          <CheckCircle className="h-4 w-4 mr-1" />
+          <Trophy className="h-4 w-4 mr-1 text-yellow-500" />
           <span className="text-xs font-medium">Qualified</span>
+        </div>
+      )
+    }
+    if (allComplete) {
+      return (
+        <div className="flex items-center text-green-600">
+          <CheckCircle className="h-4 w-4 mr-1" />
+          <span className="text-xs font-medium">Winner</span>
         </div>
       )
     }
     return (
       <div className="flex items-center text-yellow-600">
-        <AlertCircle className="h-4 w-4 mr-1" />
+        <TrendingUp className="h-4 w-4 mr-1" />
         <span className="text-xs font-medium">Leading</span>
       </div>
     )
   }
   
-  if (status === 'eliminated') {
+  if (status === 'eliminated' || (allComplete && position !== 1)) {
     return (
-      <div className="flex items-center text-red-600">
+      <div className="flex items-center text-gray-400">
         <XCircle className="h-4 w-4 mr-1" />
         <span className="text-xs font-medium">Eliminated</span>
+      </div>
+    )
+  }
+  
+  if (status === 'active' && !allComplete) {
+    return (
+      <div className="flex items-center text-blue-500">
+        <Target className="h-4 w-4 mr-1" />
+        <span className="text-xs font-medium">Active</span>
       </div>
     )
   }
@@ -52,14 +69,8 @@ export default function GroupStandings({ groupName, division }: GroupStandingsPr
       await loadStandings()
     })
     
-    // Subscribe to qualification updates
-    const unsubscribeQualifications = subscribeToQualificationUpdates(async () => {
-      await loadStandings()
-    })
-    
     return () => {
       unsubscribeMatches()
-      unsubscribeQualifications()
     }
   }, [groupName, division])
 
@@ -117,10 +128,11 @@ export default function GroupStandings({ groupName, division }: GroupStandingsPr
             {standings.map((standing, index) => (
               <tr 
                 key={standing.team_id} 
-                className={`border-b ${
-                  standing.position === 1 ? 'bg-green-50' : ''
+                className={`border-b transition-all ${
+                  standing.qualification_status === 'through' ? 'bg-gradient-to-r from-green-50 to-emerald-50 font-medium' :
+                  (standing.position || index + 1) === 1 ? 'bg-yellow-50' : ''
                 } ${
-                  standing.qualification_status === 'eliminated' ? 'opacity-60' : ''
+                  standing.qualification_status === 'eliminated' || (allMatchesComplete && (standing.position || index + 1) !== 1) ? 'opacity-60' : ''
                 }`}
               >
                 <td className="py-3 text-sm">
@@ -152,7 +164,8 @@ export default function GroupStandings({ groupName, division }: GroupStandingsPr
                 <td className="py-3">
                   <QualificationIndicator 
                     status={standing.qualification_status} 
-                    position={standing.position}
+                    position={standing.position || index + 1}
+                    allComplete={allMatchesComplete}
                   />
                 </td>
               </tr>
