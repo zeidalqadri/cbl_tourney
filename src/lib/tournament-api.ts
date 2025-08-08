@@ -182,14 +182,15 @@ export async function updateMatchScore(
 ) {
   const { data: match } = await supabase
     .from('tournament_matches')
-    .select('team1_id, team2_id')
+    .select('team1_id, team2_id, metadata')
     .eq('id', matchId)
     .single()
     
   const updates: any = {
     score1: scoreA,
     score2: scoreB,
-    status: 'completed'
+    status: 'completed',
+    updated_at: new Date().toISOString()
   }
   
   // Set winner if match exists and has teams
@@ -199,6 +200,7 @@ export async function updateMatchScore(
     } else if (scoreB > scoreA) {
       updates.winner_id = match.team2_id
     }
+    // If it's a draw, don't set winner_id
   }
   
   const { error } = await supabase
@@ -207,6 +209,18 @@ export async function updateMatchScore(
     .eq('id', matchId)
   
   if (error) throw error
+  
+  // Auto-progress winner to next round if applicable
+  if (updates.winner_id && match?.metadata?.type !== 'final') {
+    try {
+      const { progressMatchWinner } = await import('./tournament-progression')
+      await progressMatchWinner(matchId)
+      console.log(`Auto-progressed winner from match ${matchId}`)
+    } catch (progressError) {
+      console.error('Failed to auto-progress winner:', progressError)
+      // Don't throw - score update was successful even if progression failed
+    }
+  }
 }
 
 // Group standings
