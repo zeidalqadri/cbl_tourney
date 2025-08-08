@@ -48,7 +48,9 @@ export default function TournamentStatusDashboard() {
         const groupMatches = divisionMatches.filter(m => m.round === 'Group Stage')
         const groupCompleted = groupMatches.filter(m => m.status === 'completed').length
         
-        // Quarter finals status
+        // Second round status (for boys) / Quarter finals status (for girls)
+        const secondRoundMatches = divisionMatches.filter(m => m.round === 'Second Round')
+        const secondRoundCompleted = secondRoundMatches.filter(m => m.status === 'completed').length
         const quarterMatches = divisionMatches.filter(m => m.round === 'Quarter Final')
         const quarterCompleted = quarterMatches.filter(m => m.status === 'completed').length
         
@@ -63,20 +65,58 @@ export default function TournamentStatusDashboard() {
         // Determine current stage
         let currentStage = 'Group Stage'
         if (groupCompleted === groupMatches.length && groupMatches.length > 0) {
-          if (quarterCompleted < quarterMatches.length) currentStage = 'Quarter Finals'
-          else if (semiCompleted < semiMatches.length) currentStage = 'Semi Finals'
-          else if (finalCompleted < finalMatches.length) currentStage = 'Finals'
-          else currentStage = 'Tournament Complete'
+          if (division === 'boys') {
+            // Boys: Group → Second Round → Semi Finals → Finals
+            if (secondRoundCompleted < secondRoundMatches.length && secondRoundMatches.length > 0) currentStage = 'Second Round'
+            else if (semiCompleted < semiMatches.length) currentStage = 'Semi Finals'
+            else if (finalCompleted < finalMatches.length) currentStage = 'Finals'
+            else currentStage = 'Tournament Complete'
+          } else {
+            // Girls: Group → Quarter Finals → Semi Finals → Finals
+            if (quarterCompleted < quarterMatches.length && quarterMatches.length > 0) currentStage = 'Quarter Finals'
+            else if (semiCompleted < semiMatches.length) currentStage = 'Semi Finals'
+            else if (finalCompleted < finalMatches.length) currentStage = 'Finals'
+            else currentStage = 'Tournament Complete'
+          }
         }
         
         return {
           division,
           groupStageComplete: division === 'boys' ? boysComplete : girlsComplete,
           currentStage,
-          stages: [
+          stages: division === 'boys' ? [
             {
               stage: 'Group Stage',
-              status: groupCompleted === groupMatches.length ? 'completed' : 
+              status: groupCompleted === groupMatches.length && groupMatches.length > 0 ? 'completed' : 
+                      groupCompleted > 0 ? 'in_progress' : 'pending',
+              matchesCompleted: groupCompleted,
+              totalMatches: groupMatches.length
+            },
+            {
+              stage: 'Second Round',
+              status: secondRoundCompleted === secondRoundMatches.length && secondRoundMatches.length > 0 ? 'completed' : 
+                      secondRoundCompleted > 0 ? 'in_progress' : 'pending',
+              matchesCompleted: secondRoundCompleted,
+              totalMatches: secondRoundMatches.length || 8 // Expected for 11 teams
+            },
+            {
+              stage: 'Semi Finals',
+              status: semiCompleted === semiMatches.length && semiMatches.length > 0 ? 'completed' : 
+                      semiCompleted > 0 ? 'in_progress' : 'pending',
+              matchesCompleted: semiCompleted,
+              totalMatches: semiMatches.length || 2
+            },
+            {
+              stage: 'Finals',
+              status: finalCompleted === finalMatches.length && finalMatches.length > 0 ? 'completed' : 
+                      finalCompleted > 0 ? 'in_progress' : 'pending',
+              matchesCompleted: finalCompleted,
+              totalMatches: finalMatches.length || 1
+            }
+          ] : [
+            {
+              stage: 'Group Stage',
+              status: groupCompleted === groupMatches.length && groupMatches.length > 0 ? 'completed' : 
                       groupCompleted > 0 ? 'in_progress' : 'pending',
               matchesCompleted: groupCompleted,
               totalMatches: groupMatches.length

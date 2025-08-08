@@ -18,7 +18,7 @@ function BracketMatch({ match, roundName, showAdminControls = false, onProgressC
   const hasTeams = match.teamA.id && match.teamB.id
   const canProgress = isCompleted && match.round !== 'Final' && hasTeams
   const needsTeams = !match.teamA.id || !match.teamB.id
-  const isPlaceholder = (name: string) => name.includes('Winner') || name.includes('TBD') || !name
+  const isPlaceholder = (name: string) => name.includes('Winner') || name.includes('Runner-up') || name.includes('Awaiting') || name.includes('TBD') || !name
   
   // Determine winner
   const getWinner = () => {
@@ -56,8 +56,8 @@ function BracketMatch({ match, roundName, showAdminControls = false, onProgressC
           <div className="flex items-center space-x-2">
             <Users className={`h-4 w-4 ${winner === 'A' ? 'text-green-600' : 'text-gray-400'}`} />
             <div className="flex flex-col">
-              <span className={`${isPlaceholder(match.teamA.name) ? 'text-gray-400 italic text-sm' : ''} ${winner === 'A' ? 'font-semibold text-green-700' : ''}`}>
-                {match.teamA.name || 'Awaiting Qualification'}
+              <span className={`${isPlaceholder(match.teamA.name) ? 'text-gray-500 italic text-sm' : ''} ${winner === 'A' ? 'font-semibold text-green-700' : ''}`}>
+                {match.teamA.name || 'Awaiting Team'}
               </span>
               {winner === 'A' && (
                 <span className="text-xs text-green-600 font-medium flex items-center gap-1">
@@ -81,8 +81,8 @@ function BracketMatch({ match, roundName, showAdminControls = false, onProgressC
           <div className="flex items-center space-x-2">
             <Users className={`h-4 w-4 ${winner === 'B' ? 'text-green-600' : 'text-gray-400'}`} />
             <div className="flex flex-col">
-              <span className={`${isPlaceholder(match.teamB.name) ? 'text-gray-400 italic text-sm' : ''} ${winner === 'B' ? 'font-semibold text-green-700' : ''}`}>
-                {match.teamB.name || 'Awaiting Qualification'}
+              <span className={`${isPlaceholder(match.teamB.name) ? 'text-gray-500 italic text-sm' : ''} ${winner === 'B' ? 'font-semibold text-green-700' : ''}`}>
+                {match.teamB.name || 'Awaiting Team'}
               </span>
               {winner === 'B' && (
                 <span className="text-xs text-green-600 font-medium flex items-center gap-1">

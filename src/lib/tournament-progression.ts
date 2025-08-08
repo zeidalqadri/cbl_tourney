@@ -162,22 +162,72 @@ export async function progressMatchWinner(matchId: string) {
   }
   
   // Find the next match that's waiting for this winner
-  const { data: nextMatches } = await supabase
-    .from('tournament_matches')
-    .select('*')
-    .eq('tournament_id', TOURNAMENT_ID)
-    .eq('round', nextRound)
-    .eq('metadata->>type', nextMatchType)
-    .eq('metadata->>division', match.metadata?.division || winnerTeam.division)
-    .is('team1_id', null)
+  // Try to match based on placeholder metadata first
+  let nextMatch = null
   
-  if (nextMatches && nextMatches.length > 0) {
-    const nextMatch = nextMatches[0]
+  // Build a placeholder name based on the current match
+  let winnerPlaceholder = ''
+  if (match.metadata?.type === 'quarter_final' && match.metadata?.match_sequence) {
+    winnerPlaceholder = `QF${match.metadata.match_sequence} Winner`
+  } else if (match.metadata?.type === 'semi_final' && match.metadata?.match_sequence) {
+    winnerPlaceholder = `SF${match.metadata.match_sequence} Winner`
+  } else if (match.metadata?.type === 'second_round' && match.metadata?.match_sequence) {
+    winnerPlaceholder = `Second Round ${match.metadata.match_sequence} Winner`
+  }
+  
+  // First, try to find a match expecting this specific winner by placeholder
+  if (winnerPlaceholder) {
+    const { data: placeholderMatches } = await supabase
+      .from('tournament_matches')
+      .select('*')
+      .eq('tournament_id', TOURNAMENT_ID)
+      .eq('round', nextRound)
+      .eq('metadata->>type', nextMatchType)
+      .or(`metadata->>team1_placeholder.eq.${winnerPlaceholder},metadata->>team2_placeholder.eq.${winnerPlaceholder}`)
     
-    // Determine slot (team1 or team2) based on match numbering
-    const updateData = nextMatch.team1_id === null 
-      ? { team1_id: winnerId }
-      : { team2_id: winnerId }
+    if (placeholderMatches && placeholderMatches.length > 0) {
+      nextMatch = placeholderMatches[0]
+    }
+  }
+  
+  // If not found by placeholder, find any available match of the right type
+  if (!nextMatch) {
+    const { data: nextMatches } = await supabase
+      .from('tournament_matches')
+      .select('*')
+      .eq('tournament_id', TOURNAMENT_ID)
+      .eq('round', nextRound)
+      .eq('metadata->>type', nextMatchType)
+      .eq('metadata->>division', match.metadata?.division || winnerTeam.division)
+      .or('team1_id.is.null,team2_id.is.null')
+    
+    if (nextMatches && nextMatches.length > 0) {
+      nextMatch = nextMatches[0]
+    }
+  }
+  
+  if (nextMatch) {
+    // Determine which slot to fill based on placeholder or availability
+    let updateData: any = {}
+    
+    if (winnerPlaceholder && nextMatch.metadata) {
+      // Use placeholder to determine position
+      if (nextMatch.metadata.team1_placeholder === winnerPlaceholder) {
+        updateData.team1_id = winnerId
+      } else if (nextMatch.metadata.team2_placeholder === winnerPlaceholder) {
+        updateData.team2_id = winnerId
+      } else {
+        // Fallback to first available slot
+        updateData = nextMatch.team1_id === null 
+          ? { team1_id: winnerId }
+          : { team2_id: winnerId }
+      }
+    } else {
+      // No placeholder matching, use first available slot
+      updateData = nextMatch.team1_id === null 
+        ? { team1_id: winnerId }
+        : { team2_id: winnerId }
+    }
     
     // Update next match with winner
     await supabase

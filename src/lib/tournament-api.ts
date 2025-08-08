@@ -3,6 +3,35 @@ import { Match, Team, TeamWithQualification, GroupStanding } from '@/types/tourn
 
 const TOURNAMENT_ID = '66666666-6666-6666-6666-666666666666'
 
+// Format placeholder names to be more user-friendly
+function formatPlaceholderName(placeholder?: string): string {
+  if (!placeholder) return ''
+  
+  // Convert patterns like "Winner PA" to "Winner of Group PA"
+  if (placeholder.startsWith('Winner ')) {
+    const group = placeholder.replace('Winner ', '')
+    return `Winner of Group ${group}`
+  }
+  
+  // Convert patterns like "Runner-up PA" to "Runner-up of Group PA"
+  if (placeholder.startsWith('Runner-up ')) {
+    const group = placeholder.replace('Runner-up ', '')
+    return `Runner-up of Group ${group}`
+  }
+  
+  // Convert patterns like "QF1 Winner" to "Quarter Final 1 Winner"
+  if (placeholder.includes('QF')) {
+    return placeholder.replace('QF', 'Quarter Final ')
+  }
+  
+  // Convert patterns like "SF1 Winner" to "Semi Final 1 Winner"
+  if (placeholder.includes('SF')) {
+    return placeholder.replace('SF', 'Semi Final ')
+  }
+  
+  return placeholder
+}
+
 // Convert database types to app types
 function dbTeamToTeam(dbTeam: any): Team {
   return {
@@ -55,13 +84,13 @@ function dbMatchToMatch(dbMatch: any, team1: any, team2: any): Match {
     round: roundName,
     teamA: team1 ? dbTeamToTeam(team1) : { 
       id: '', 
-      name: dbMatch.metadata?.team1_placeholder || 'TBD', 
+      name: formatPlaceholderName(dbMatch.metadata?.team1_placeholder) || 'Awaiting Team', 
       group: '', 
       division: (dbMatch.metadata?.division || 'boys') as 'boys' | 'girls'
     },
     teamB: team2 ? dbTeamToTeam(team2) : { 
       id: '', 
-      name: dbMatch.metadata?.team2_placeholder || 'TBD', 
+      name: formatPlaceholderName(dbMatch.metadata?.team2_placeholder) || 'Awaiting Team', 
       group: '', 
       division: (dbMatch.metadata?.division || 'boys') as 'boys' | 'girls'
     },
