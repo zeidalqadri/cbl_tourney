@@ -54,6 +54,157 @@ export async function getQualifiedTeams(
 }
 
 /**
+ * Calculate boys second round standings
+ */
+async function calculateBoysSecondRoundStandings() {
+  // Get all boys teams
+  const { data: teams } = await supabase
+    .from('tournament_teams')
+    .select('id, team_name')
+    .eq('division', 'boys')
+  
+  // Initialize standings
+  const standings: Record<string, {
+    id: string
+    name: string
+    wins: number
+    losses: number
+    pointsFor: number
+    pointsAgainst: number
+    matchesPlayed: number[]
+  }> = {}
+  
+  teams?.forEach(team => {
+    standings[team.id] = {
+      id: team.id,
+      name: team.team_name,
+      wins: 0,
+      losses: 0,
+      pointsFor: 0,
+      pointsAgainst: 0,
+      matchesPlayed: []
+    }
+  })
+  
+  // Get all second round matches
+  const { data: matches } = await supabase
+    .from('tournament_matches')
+    .select('*')
+    .eq('tournament_id', TOURNAMENT_ID)
+    .eq('round', 2)
+    .eq('metadata->>division', 'boys')
+    .eq('status', 'completed')
+  
+  // Calculate standings
+  matches?.forEach(match => {
+    if (match.team1_id && match.team2_id && match.winner_id) {
+      const winner = match.winner_id
+      const loser = winner === match.team1_id ? match.team2_id : match.team1_id
+      
+      // Update winner stats
+      if (standings[winner]) {
+        standings[winner].wins++
+        standings[winner].pointsFor += winner === match.team1_id ? match.score1 : match.score2
+        standings[winner].pointsAgainst += winner === match.team1_id ? match.score2 : match.score1
+        standings[winner].matchesPlayed.push(match.match_number)
+      }
+      
+      // Update loser stats
+      if (standings[loser]) {
+        standings[loser].losses++
+        standings[loser].pointsFor += loser === match.team1_id ? match.score1 : match.score2
+        standings[loser].pointsAgainst += loser === match.team1_id ? match.score2 : match.score1
+        standings[loser].matchesPlayed.push(match.match_number)
+      }
+    }
+  })
+  
+  // Sort by wins, then by point differential
+  const sortedStandings = Object.values(standings)
+    .filter(team => team.matchesPlayed.length > 0)
+    .sort((a, b) => {
+      if (b.wins !== a.wins) return b.wins - a.wins
+      const aDiff = a.pointsFor - a.pointsAgainst
+      const bDiff = b.pointsFor - b.pointsAgainst
+      return bDiff - aDiff
+    })
+  
+  return sortedStandings
+}
+
+/**
+ * Progress boys teams from second round to semi-finals based on standings
+ */
+async function progressBoysToSemiFinals() {
+  const standings = await calculateBoysSecondRoundStandings()
+  
+  if (standings.length < 4) {
+    throw new Error('Not enough teams with second round records for boys semi-finals')
+  }
+  
+  // Top 4 teams advance to semi-finals
+  const topTeams = standings.slice(0, 4)
+  
+  // For boys: specific tournament matchups (not standard 1v4, 2v3)
+  // Match #125: CHENG vs CHABAU
+  // Match #127: YU HWA vs BKT BERUANG
+  const cheng = topTeams.find(t => t.name === 'CHENG (B)')
+  const chabau = topTeams.find(t => t.name === 'CHABAU (B)')
+  const yuHwa = topTeams.find(t => t.name === 'YU HWA (B)')
+  const bktBeruang = topTeams.find(t => t.name === 'BKT BERUANG (B)')
+  
+  if (cheng && chabau) {
+    await supabase
+      .from('tournament_matches')
+      .update({
+        team1_id: cheng.id,
+        team2_id: chabau.id,
+        metadata: {
+          type: 'semi_final',
+          division: 'boys',
+          progression_method: 'second_round_standings',
+          team1_record: `${cheng.wins}W-${cheng.losses}L`,
+          team2_record: `${chabau.wins}W-${chabau.losses}L`
+        },
+        updated_at: new Date().toISOString()
+      })
+      .eq('match_number', 125)
+  }
+  
+  if (yuHwa && bktBeruang) {
+    await supabase
+      .from('tournament_matches')
+      .update({
+        team1_id: yuHwa.id,
+        team2_id: bktBeruang.id,
+        metadata: {
+          type: 'semi_final',
+          division: 'boys',
+          progression_method: 'second_round_standings',
+          team1_record: `${yuHwa.wins}W-${yuHwa.losses}L`,
+          team2_record: `${bktBeruang.wins}W-${bktBeruang.losses}L`
+        },
+        updated_at: new Date().toISOString()
+      })
+      .eq('match_number', 127)
+  }
+  
+  // Update team qualification status
+  for (const team of topTeams) {
+    await supabase
+      .from('tournament_teams')
+      .update({
+        qualification_status: 'through',
+        current_stage: 'semi_final',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', team.id)
+  }
+  
+  return topTeams
+}
+
+/**
  * Progress teams from group stage to knockout rounds
  */
 export async function progressToKnockoutStage(division: Division) {
@@ -63,7 +214,29 @@ export async function progressToKnockoutStage(division: Division) {
     throw new Error('Group stage not complete for ' + division + ' division')
   }
   
-  // Get qualified teams (only 1 per group advances)
+  // Boys division uses second round standings system
+  if (division === 'boys') {
+    // Check if second round is complete
+    const { data: secondRoundMatches } = await supabase
+      .from('tournament_matches')
+      .select('status')
+      .eq('tournament_id', TOURNAMENT_ID)
+      .eq('round', 2)
+      .eq('metadata->>division', 'boys')
+    
+    const secondRoundComplete = secondRoundMatches?.every(m => m.status === 'completed')
+    
+    if (secondRoundComplete) {
+      // Progress based on standings
+      return await progressBoysToSemiFinals()
+    } else {
+      // Second round not complete, just populate second round matches
+      // This would be handled by a different function
+      throw new Error('Boys second round not complete')
+    }
+  }
+  
+  // Girls division uses traditional quarter-finals
   const qualifiedTeams = await getQualifiedTeams(division, 1)
   
   // Generate quarter-final matchups
@@ -422,6 +595,11 @@ export async function progressAllCompletedMatches() {
   
   return results
 }
+
+/**
+ * Export boys-specific progression functions
+ */
+export { calculateBoysSecondRoundStandings, progressBoysToSemiFinals }
 
 /**
  * Update tournament final positions
