@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { Match } from '@/types/tournament'
-import { getMatches, updateMatchScore } from '@/lib/tournament-api'
+import { getMatches } from '@/lib/tournament-api'
+import { updateMatchScoreSafe } from '@/lib/tournament-api-safe'
 import { progressMatchWinner } from '@/lib/tournament-progression'
 import { Camera, Upload, ChevronRight } from 'lucide-react'
 import PhotoUpload from './PhotoUpload'
@@ -75,7 +76,7 @@ export default function ScoreInput() {
     setIsSubmitting(true)
     
     try {
-      await updateMatchScore(
+      await updateMatchScoreSafe(
         selectedMatch,
         parseInt(scoreA),
         parseInt(scoreB)

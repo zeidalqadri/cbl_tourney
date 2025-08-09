@@ -1,0 +1,11 @@
+name = "cbl-coverage-api"
+main = "simple-youtube-api.js"
+compatibility_date = "2025-01-15"
+
+# Environment variables
+[vars]
+ALLOWED_ORIGIN = "https://cbl-tourney.pages.dev"
+YOUTUBE_CHANNEL_ID = "UCSTjgKoXJT41KMsqKnOTxZQ"
+
+# Routes (optional - can use workers.dev subdomain)
+# route = { pattern = "api.cbl-tourney.com/*", zone_name = "cbl-tourney.com" }
