@@ -208,7 +208,17 @@ export async function updateMatchScore(
     .update(updates)
     .eq('id', matchId)
   
-  if (error) throw error
+  if (error) {
+    console.error('❌ Score update failed:', {
+      matchId,
+      updates,
+      error: error.message,
+      details: error.details,
+      hint: error.hint,
+      code: error.code
+    })
+    throw new Error(`Failed to update score: ${error.message}. ${error.hint || ''}`)
+  }
   
   // Auto-progress winner to next round if applicable
   if (updates.winner_id && match?.metadata?.type !== 'final') {

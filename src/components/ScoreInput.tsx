@@ -115,7 +115,8 @@ export default function ScoreInput() {
       loadTodayMatches()
     } catch (error) {
       console.error('Error submitting score:', error)
-      alert('Error submitting score')
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      alert(`Error submitting score: ${errorMessage}`)
     } finally {
       setIsSubmitting(false)
     }

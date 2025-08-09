@@ -10,7 +10,6 @@ import MediaViewer from './MediaViewer'
 import { MediaContent } from '@/types/media'
 // import { useRealtimeMedia } from '@/hooks/useRealtimeMedia'
 import { getMatchMedia } from '@/lib/media-api'
-import { MatchCoverageBadge } from './MatchCoverage'
 import { MatchVideoBadge, MatchVideoLink } from './MatchVideoLink'
 
 interface EnhancedMatchCardProps {
@@ -113,7 +112,6 @@ const EnhancedMatchCard = memo(function EnhancedMatchCard({ match }: EnhancedMat
             }`}>
               {match.division === 'boys' ? 'BOYS' : 'GIRLS'}
             </span>
-            <MatchCoverageBadge venue={match.venue} />
             <MatchVideoBadge match={match} />
           </div>
           {isLive && (
